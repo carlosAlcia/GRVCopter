@@ -23,6 +23,10 @@ class PID {
             _kd = kd;
         }
 
+        //@brief Function to compute the PID action.
+        //@param target: [float]
+        //@param current: [float]
+        //@returns [float] The PID action.
         float update_pid(float target, float current){
             float error = target - current;
             int_error += error*DT;
@@ -32,6 +36,9 @@ class PID {
             return out_controller;
         }
 
+        //@brief Function to compute the PID action.
+        //@param error: [float]
+        //@returns [float] The PID action.
         float update_pid(float error){
             int_error += error*DT;
             float der_error = (error-error_a)/DT;
@@ -40,12 +47,18 @@ class PID {
             return out_controller;
         }
 
+        //@brief Function to reset the integral term.
         void reset_i(){
             int_error = 0.0;
         }
 
+        //@brief Function to get or set the kp.
         float& kp(){return _kp;}
+
+        //@brief Function to get or set the ki.
         float& ki(){return _ki;}
+        
+        //@brief Function to get or set the kd.
         float& kd(){return _kd;}
 
 };

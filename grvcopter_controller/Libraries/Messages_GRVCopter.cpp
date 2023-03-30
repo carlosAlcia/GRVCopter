@@ -31,6 +31,17 @@ void MSG_GRVCOPTER::pack_att_message(float *attitude, Message_Bytes *msg)
     }
 }
 
+void MSG_GRVCOPTER::pack_rate_message(float *rate, Message_Bytes *msg)
+{
+    memset(msg, 0, sizeof(Message_Bytes));
+    msg->MSG_ID.value = RATE_MSG_ID;
+    msg->TIME.value = get_time_us();
+    for (int i = 0; i < 3; i++)
+    {
+        msg->DATA[i].value = rate[i];
+    }
+}
+
 void MSG_GRVCOPTER::pack_pos_message(float *position, Message_Bytes *msg)
 {
     memset(msg, 0, sizeof(Message_Bytes));
@@ -39,6 +50,17 @@ void MSG_GRVCOPTER::pack_pos_message(float *position, Message_Bytes *msg)
     for (int i = 0; i < 3; i++)
     {
         msg->DATA[i].value = position[i];
+    }
+}
+
+void MSG_GRVCOPTER::pack_vel_message(float *vel, Message_Bytes *msg)
+{
+    memset(msg, 0, sizeof(Message_Bytes));
+    msg->MSG_ID.value = VEL_MSG_ID;
+    msg->TIME.value = get_time_us();
+    for (int i = 0; i < 3; i++)
+    {
+        msg->DATA[i].value = vel[i];
     }
 }
 

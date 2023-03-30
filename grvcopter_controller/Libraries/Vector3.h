@@ -4,9 +4,6 @@
 
 #include "math.h"
 
-class Position;
-class Attitude;
-
 
 class Vector {
 
@@ -33,13 +30,13 @@ class Vector {
             _z = _pos[2];
         }
 
-        void operator=(Vector pos){
+        virtual void operator=(Vector pos){
             _x = pos._x;
             _y = pos._y;
             _z = pos._z;
         }
 
-        void operator=(float* pos){
+        virtual void operator=(float* pos){
             _x = pos[0];
             _y = pos[1];
             _z = pos[2];
@@ -75,9 +72,5 @@ class Vector {
             error._z = target->_z - current->_z;
             return error;
         }
-
-        operator Position();
-
-        operator Attitude();
 
 };

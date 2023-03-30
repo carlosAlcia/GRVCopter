@@ -6,5 +6,10 @@
 extern COMMON::Common& common;
 
 void Controller::run(){
-    std::cout << common.get_rc()->get_channel(CH_THROTTLE) << std::endl;
+
+    Acceleration accel_xyz_mss;
+    if (common.has_position()) {
+        accel_xyz_mss = position_control.run(common.get_target_position(), common.get_current_position(), common.get_current_vel());
+    } 
+    
 }

@@ -36,6 +36,16 @@ namespace MSG_GRVCOPTER {
         //PWM_...
         //PWM_NUM_MOTORS
     static constexpr unsigned short PWM_MSG_ID = 4;
+    //DATA:
+        //Roll
+        //Pitch
+        //Yaw
+    static constexpr unsigned short RATE_MSG_ID = 5;
+    //DATA:
+        //X
+        //Y
+        //Z
+    static constexpr unsigned short VEL_MSG_ID = 6;
 
 
     static constexpr unsigned short MAX_NUM_CHANNEL = 14;
@@ -70,7 +80,11 @@ namespace MSG_GRVCOPTER {
 
     void pack_att_message(float* attitude, Message_Bytes* msg);
 
+    void pack_rate_message(float* rate, Message_Bytes* msg);
+
     void pack_pos_message(float* position, Message_Bytes* msg);
+
+    void pack_vel_message(float* vel, Message_Bytes* msg);
 
     void get_bytes_msg(Message_Bytes* msg, char *bytes_msg);
 

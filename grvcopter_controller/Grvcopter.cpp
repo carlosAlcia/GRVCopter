@@ -56,6 +56,12 @@ void process_msg(char* buf){
     case POS_MSG_ID:
         process_pos_msg(&msg);
         break;
+    case RATE_MSG_ID:
+        process_rate_msg(&msg);
+        break;
+    case VEL_MSG_ID:
+        process_vel_msg(&msg);
+        break;
     case RC_MSG_ID:
         process_rc_msg(&msg);
         break;
@@ -66,13 +72,18 @@ void process_msg(char* buf){
 
 void process_att_msg(MSG_GRVCOPTER::Message_Bytes *msg){
     common.update_current_attitude(&(msg->DATA[0].value));
-    RC rc = RC();
-    common.get_rc(rc);
-    cout << rc.get_throttle() << endl;
 }
 
 void process_pos_msg(MSG_GRVCOPTER::Message_Bytes *msg){
     common.update_current_position(&(msg->DATA[0].value));
+}
+
+void process_rate_msg(MSG_GRVCOPTER::Message_Bytes *msg){
+    common.update_current_rate(&(msg->DATA[0].value));
+}
+
+void process_vel_msg(MSG_GRVCOPTER::Message_Bytes *msg){
+    common.update_current_vel(&(msg->DATA[0].value));
 }
 
 void process_rc_msg(MSG_GRVCOPTER::Message_Bytes *msg){

@@ -33,23 +33,11 @@ class Quaternion {
 class Attitude : public Vector{
     public:         
     
-    Attitude(){
-        _x = 0.0;
-        _y = 0.0;
-        _z = 0.0;
-    }
+    Attitude():Vector(){}
 
-    Attitude(float roll, float pitch, float yaw){
-        _x = roll;
-        _y = pitch;
-        _z = yaw;
-    }
+    Attitude(float roll, float pitch, float yaw):Vector(roll, pitch, yaw){}
 
-    Attitude(float* _pos){
-        _x = _pos[0];
-        _y = _pos[1];
-        _z = _pos[2];
-    }
+    Attitude(float* _pos):Vector(_pos){}
 
     float& roll(){return _x;}
     float& pitch(){return _y;}
@@ -92,5 +80,14 @@ class Attitude : public Vector{
 
 
 
+};
+
+class Rate : public Attitude{
+    public:
+        Rate():Attitude(){}
+
+        Rate(float roll, float pitch, float yaw):Attitude(roll, pitch, yaw){}
+
+        Rate(float* _rate):Attitude(_rate){}
 };
 

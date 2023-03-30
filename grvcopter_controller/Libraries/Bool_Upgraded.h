@@ -31,8 +31,8 @@ class Ebool {
             _value = _new_value;
         }
 
-        explicit operator bool() const {
-            return _value;
+        operator bool() const {
+            return (_value==true);
         }
 
         void tick(){
