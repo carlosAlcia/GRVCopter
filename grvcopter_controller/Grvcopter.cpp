@@ -1,0 +1,84 @@
+//Created by Carlos Álvarez Cía 2023
+
+
+#include "Grvcopter.h"
+
+using namespace std;
+
+void thread_reception_f(){
+    char buffer[MSG_GRVCOPTER::MSG_SIZE] {0};
+    while(true){
+        sock->Receive(buffer);
+        process_msg(buffer);
+    }
+}
+
+
+int main(){
+
+    cout << "GRVCopter 1.0" << endl;
+    cout << "Carlos Álvarez Cía 2023" << endl;
+    cout << "\n" << endl;
+    cout << "Enter UAV IP" << endl;
+    char ip[20];
+    cin >> ip;
+
+    UDP::UDP_Socket socket_local = UDP::UDP_Socket(ip);
+
+    sock = &socket_local;
+    sock->Ping();
+
+    thread thread_reception = thread(&thread_reception_f);
+
+    
+
+      //Desde este hilo no se pueden hacer llamadas a gcs().
+    while (true) {
+        auto x = std::chrono::steady_clock::now() + std::chrono::milliseconds(INTERVAL_CONTROLLER);
+        run_controller();
+        std::this_thread::sleep_until(x);
+    }
+
+    return 0;
+}
+
+void process_msg(char* buf){
+    using namespace MSG_GRVCOPTER;
+
+    Message_Bytes msg;
+    unpack_message(buf, &msg);
+
+    switch (msg.MSG_ID.value)
+    {
+    case ATT_MSG_ID:
+        process_att_msg(&msg);
+        break;
+    case POS_MSG_ID:
+        process_pos_msg(&msg);
+        break;
+    case RC_MSG_ID:
+        process_rc_msg(&msg);
+        break;
+    default:
+        break;
+    }
+}
+
+void process_att_msg(MSG_GRVCOPTER::Message_Bytes *msg){
+    common.update_current_attitude(&(msg->DATA[0].value));
+    RC rc = RC();
+    common.get_rc(rc);
+    cout << rc.get_throttle() << endl;
+}
+
+void process_pos_msg(MSG_GRVCOPTER::Message_Bytes *msg){
+    common.update_current_position(&(msg->DATA[0].value));
+}
+
+void process_rc_msg(MSG_GRVCOPTER::Message_Bytes *msg){
+    common.update_rc(&(msg->DATA[0].value));
+};
+
+void run_controller(){
+    controller.run();
+}
