@@ -20,8 +20,8 @@ int main(){
     cout << "Carlos Álvarez Cía 2023" << endl;
     cout << "\n" << endl;
     cout << "Enter UAV IP" << endl;
-    char ip[20];
-    cin >> ip;
+    char ip[20] = "192.168.0.105";
+    //cin >> ip;
 
     UDP::UDP_Socket socket_local = UDP::UDP_Socket(ip);
 
@@ -94,6 +94,7 @@ void process_rc_msg(MSG_GRVCOPTER::Message_Bytes *msg){
 
 void run_controller(){
     if (common.grvcopter_running()){
+        common.check_mode();
         controller.run();
     }
 }

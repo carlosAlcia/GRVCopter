@@ -7,6 +7,7 @@ static constexpr int CH_ROLL = 0;
 static constexpr int CH_PITCH = 1;
 static constexpr int CH_THROTTLE = 2;
 static constexpr int CH_YAW = 3;
+static constexpr int CH_MODE = 4;
 static constexpr int CH_GRVCOPTER_ENABLED = 9-1; //Channel 9 in the RC, one less because of beginning in 0.
 
 class RC {

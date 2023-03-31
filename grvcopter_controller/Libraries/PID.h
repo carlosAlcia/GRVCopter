@@ -2,10 +2,11 @@
 
 
 #pragma once
+#include "Helper.h"
 
-static constexpr float DEFAULT_KP_PID = 0.001;
-static constexpr float DEFAULT_KI_PID = 0.0001;
-static constexpr float DEFAULT_KD_PID = 0.0001;
+static constexpr float DEFAULT_KP_PID = 1;
+static constexpr float DEFAULT_KI_PID = 1;
+static constexpr float DEFAULT_KD_PID = 1;
 static constexpr float DT = 0.01;
 
 
@@ -14,6 +15,7 @@ class PID {
         float _kp, _ki, _kd;
         float int_error {0.0};
         float error_a {0.0};
+        float max_i = 0.5;
 
 
     public:
@@ -30,6 +32,7 @@ class PID {
         float update_pid(float target, float current){
             float error = target - current;
             int_error += error*DT;
+            saturation(int_error, -max_i, max_i);
             float der_error = (error-error_a)/DT;
             float out_controller = _kp*error + _ki*int_error + _kd*der_error;
             error_a = error;
@@ -41,6 +44,7 @@ class PID {
         //@returns [float] The PID action.
         float update_pid(float error){
             int_error += error*DT;
+            saturation(int_error, -max_i, max_i);
             float der_error = (error-error_a)/DT;
             float out_controller = _kp*error + _ki*int_error + _kd*der_error;
             error_a = error;

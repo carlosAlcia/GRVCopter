@@ -88,6 +88,26 @@ class Vector {
             }
         }
 
+        //@brief Normalize vector between -1:1.
+        void normalize_sign() {
+            float max = _x;
+            float min = _x;
+            if (_y > max){
+                max = _y;
+            }
+            if (_y < min){
+                min = _y;
+            }
+            if (_z > max){
+                max = _z;
+            }
+            if (_z < min){
+                min = _z;
+            }
+            *this = *this/(max-min);
+        
+        }
+
         //Compute the error in each axis between two vectors.
         //@param Vector* target
         //@param Vector* current

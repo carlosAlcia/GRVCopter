@@ -49,6 +49,11 @@ class Position : public Vector{
         this->_z *= -1; 
     }
 
+    //@brief Function to pass from NED to NEU.
+    void from_NED_to_NEU() {
+        this->_z *= -1; 
+    }
+
 
 
 };

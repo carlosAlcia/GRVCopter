@@ -191,12 +191,12 @@ public:
         
         for (int i = 0; i < UAV::num_motors; i++)
         {
-            force_each_motor[i] += forces->x()*x_factor[i];
-            force_each_motor[i] += forces->y()*y_factor[i];
+            force_each_motor[i] += forces->x()*x_factor[i]*0.1;
+            force_each_motor[i] += forces->y()*y_factor[i]*0.1;
             force_each_motor[i] += forces->z()*z_factor[i];
-            force_each_motor[i] += torques->roll()*roll_factor[i];
-            force_each_motor[i] += torques->pitch()*pitch_factor[i];
-            force_each_motor[i] += torques->yaw()*yaw_factor[i];
+            force_each_motor[i] += torques->roll()*roll_factor[i]*0.1;
+            force_each_motor[i] += torques->pitch()*pitch_factor[i]*0.1;
+            force_each_motor[i] += torques->yaw()*yaw_factor[i]*0.1;
         }
     } 
 
@@ -207,4 +207,10 @@ public:
             pwms[i] = pwm;
         }
     }
+
+    static void normalize_force_by_mass(Force& force_xyz_n){
+        float factor = 1/(UAV::mass_kg*9.81*2);
+        force_xyz_n = force_xyz_n*abs(factor);
+    }
+
 };

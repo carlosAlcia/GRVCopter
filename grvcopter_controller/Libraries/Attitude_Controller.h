@@ -6,13 +6,13 @@
 
 class AttitudeControl {
     private:
-        PID pid_roll_ang = PID(DEFAULT_KP_PID, 0, 0);
-        PID pid_pitch_ang = PID(DEFAULT_KP_PID, 0, 0);
+        PID pid_roll_ang = PID(DEFAULT_KP_PID*50.0, 0, 0);
+        PID pid_pitch_ang = PID(DEFAULT_KP_PID*50.0, 0, 0);
         PID pid_yaw_ang = PID(DEFAULT_KP_PID, 0, 0);
 
-        PID pid_roll_rate = PID(DEFAULT_KP_PID, DEFAULT_KI_PID, DEFAULT_KD_PID);
-        PID pid_pitch_rate = PID(DEFAULT_KP_PID, DEFAULT_KI_PID, DEFAULT_KD_PID);
-        PID pid_yaw_rate = PID(DEFAULT_KP_PID, DEFAULT_KI_PID, DEFAULT_KD_PID);
+        PID pid_roll_rate = PID(DEFAULT_KP_PID*10.0, DEFAULT_KI_PID*0.1*0, DEFAULT_KD_PID*5);
+        PID pid_pitch_rate = PID(DEFAULT_KP_PID*10.0, DEFAULT_KI_PID*0.1*0, DEFAULT_KD_PID*5);
+        PID pid_yaw_rate = PID(DEFAULT_KP_PID*0.01, DEFAULT_KI_PID*0.01*0, DEFAULT_KD_PID*1);
 
     public:
         AttitudeControl(){}

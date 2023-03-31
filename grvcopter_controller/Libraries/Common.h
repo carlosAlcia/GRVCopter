@@ -8,7 +8,8 @@
 #include "RC.h"
 #include "Bool_Upgraded.h"
 #include "UdpSocket.h"
-
+#include "UAV.h"
+#include <iostream>
 
 namespace COMMON {
 
@@ -32,6 +33,8 @@ namespace COMMON {
 
             UDP::UDP_Socket* sock;
 
+            int mode = 0;
+
             
 
 
@@ -52,6 +55,8 @@ namespace COMMON {
                 current_position = _pos;
                 //Ardupilot send position in cm, change to m to unify.
                 current_position.from_cm_to_m();
+                //ArduPilot send velocities in NEU, change to NED to unify.
+                current_position.from_NEU_to_NED();
                 _has_position = true;
                 mtx.unlock();
             }
@@ -116,6 +121,27 @@ namespace COMMON {
 
             bool has_position(){
                 return _has_position;
+            }
+
+            void check_mode(){
+                float ch_mode_value = rc.get_channel(CH_MODE);
+                if (ch_mode_value > 0.8)
+                {
+                    mode = UAV::MODE_STABILIZE;
+                }
+                else if ((ch_mode_value < 0.8) && (ch_mode_value > -0.8))
+                {
+                    mode = UAV::MODE_ALTITUDE;
+                }
+                else if (ch_mode_value < -0.8)
+                {
+                    mode = UAV::MODE_STABILIZE;
+                }
+
+            }
+
+            int get_mode(){
+                return mode;
             }
  
 
