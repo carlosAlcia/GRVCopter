@@ -3,9 +3,9 @@
 
 #pragma once
 
-static constexpr float DEFAULT_KP_PID = 1.0;
-static constexpr float DEFAULT_KI_PID = 0.1;
-static constexpr float DEFAULT_KD_PID = 0.1;
+static constexpr float DEFAULT_KP_PID = 0.001;
+static constexpr float DEFAULT_KI_PID = 0.0001;
+static constexpr float DEFAULT_KD_PID = 0.0001;
 static constexpr float DT = 0.01;
 
 

@@ -28,6 +28,8 @@ int main(){
     sock = &socket_local;
     sock->Ping();
 
+    common.set_socket(sock);
+
     thread thread_reception = thread(&thread_reception_f);
 
     
@@ -91,5 +93,7 @@ void process_rc_msg(MSG_GRVCOPTER::Message_Bytes *msg){
 };
 
 void run_controller(){
-    controller.run();
+    if (common.grvcopter_running()){
+        controller.run();
+    }
 }

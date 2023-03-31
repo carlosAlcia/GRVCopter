@@ -42,6 +42,33 @@ class Vector {
             _z = pos[2];
         }
 
+        template <class T>
+        Vector operator*(T factor){
+            Vector result;
+            result[0] = this->_x*factor;
+            result[1] = this->_y*factor;
+            result[2] = this->_z*factor;
+            return result;
+        }
+
+        //Element wise multiplication.
+        Vector operator*(Vector factors){
+            Vector result;
+            result[0] = this->_x*factors[0];
+            result[1] = this->_y*factors[1];
+            result[2] = this->_z*factors[2];
+            return result;
+        }
+
+        template <class T>
+        Vector operator/(T factor){
+            Vector result;
+            result[0] = this->_x/factor;
+            result[1] = this->_y/factor;
+            result[2] = this->_z/factor;
+            return result;
+        }
+
         float& operator[](int index){
             switch (index)
             {

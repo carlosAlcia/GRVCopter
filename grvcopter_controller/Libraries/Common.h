@@ -7,6 +7,7 @@
 #include "Attitude.h"
 #include "RC.h"
 #include "Bool_Upgraded.h"
+#include "UdpSocket.h"
 
 
 namespace COMMON {
@@ -16,7 +17,7 @@ namespace COMMON {
         private:
 
             Position current_position;
-            Position target_position;
+            Position target_position = Position(0.0, 1.0, -1.0);
             Velocity current_vel;
             
             Attitude current_attitude;
@@ -27,15 +28,29 @@ namespace COMMON {
             mutex mtx;
 
             Ebool _has_position;
+            Ebool _grvcopter_enabled;
+
+            UDP::UDP_Socket* sock;
+
+            
 
 
         public: 
             Common(){};
             ~Common(){};
 
+            void set_socket(UDP::UDP_Socket* _socket){
+                sock = _socket;
+            }
+
+            UDP::UDP_Socket* get_socket(){
+                return sock;
+            }
+
             void update_current_position(float *_pos){
                 mtx.lock();
                 current_position = _pos;
+                //Ardupilot send position in cm, change to m to unify.
                 current_position.from_cm_to_m();
                 _has_position = true;
                 mtx.unlock();
@@ -51,7 +66,10 @@ namespace COMMON {
             void update_current_vel(float *_vel){
                 mtx.lock();
                 current_vel = _vel;
+                //Ardupilot send velocities in cm/s, change to m/s to unify.
                 current_vel.from_cm_to_m();
+                //ArduPilot send velocities in NEU, change to NED to unify.
+                current_vel.from_NEU_to_NED();
                 mtx.unlock();
             }
 
@@ -64,7 +82,16 @@ namespace COMMON {
             void update_rc(float *_rc){
                 mtx.lock();
                 rc = _rc;
+                _grvcopter_enabled = rc.grvcopter_enabled();
                 mtx.unlock();
+            }
+
+            bool start_grvcopter(){
+                return _grvcopter_enabled.rising_edge();
+            }
+
+            bool grvcopter_running(){
+                return _grvcopter_enabled;
             }
 
 

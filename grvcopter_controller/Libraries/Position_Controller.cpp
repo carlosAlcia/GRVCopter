@@ -21,7 +21,6 @@ Acceleration PositionControl::run(Position *target, Position *current, Position 
     accel_des_from_pid.y() = pid_y_vel.update_pid(error_v.y());
     accel_des_from_pid.z() = pid_z_vel.update_pid(error_v.z());
 
-    int a = 0;
     return accel_des_from_pid;
 
 }

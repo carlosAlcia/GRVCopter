@@ -64,6 +64,18 @@ void MSG_GRVCOPTER::pack_vel_message(float *vel, Message_Bytes *msg)
     }
 }
 
+void MSG_GRVCOPTER::pack_pwm_message(int num_motors, float *pwms, Message_Bytes *msg)
+{
+    memset(msg, 0, sizeof(Message_Bytes));
+    msg->MSG_ID.value = PWM_MSG_ID;
+    msg->TIME.value = get_time_us();
+    msg->DATA[0].value = (float)num_motors;
+    for (int i = 0; i < num_motors; i++)
+    {
+        msg->DATA[i+1].value = pwms[i];
+    }
+}
+
 void MSG_GRVCOPTER::get_bytes_msg(Message_Bytes *msg, char *bytes_msg)
 {
     memset(bytes_msg, 0, MSG_SIZE);

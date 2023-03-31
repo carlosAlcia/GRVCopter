@@ -34,8 +34,26 @@ class Position : public Vector{
         _z /= 100.0;
     }
 
+    //@brief Function to rotate a vector in XY plane given Yaw.
+    void rotate_to_uav_frame(float yaw) {
+
+        Vector vec;
+        vec[0] = this->_x*cos(yaw) + this->_y*sin(yaw); 
+        vec[1] = -this->_x*sin(yaw) + this->_y*cos(yaw); 
+        vec[2] = this->_z;
+        *this = vec;
+    }
+
+    //@brief Function to pass from NEU to NED.
+    void from_NEU_to_NED() {
+        this->_z *= -1; 
+    }
+
+
+
 };
 
+//A 3D vector containing velocities in m/s and NED.
 class Velocity : public Position {
     public:
         Velocity():Position(){};
@@ -55,11 +73,32 @@ class Velocity : public Position {
     }
 };
 
+//A 3D vector containing accelerations in m/ss
 class Acceleration : public Position {
     public:
         Acceleration():Position(){};
         Acceleration(float x, float y, float z):Position(x, y, z){}
         Acceleration(float* _vel):Position(_vel){}
+
+    void operator=(Vector _v) override {
+        _x = _v[0];
+        _y = _v[1];
+        _z = _v[2];
+        }
+
+    void operator=(float* pos) override {
+        _x = pos[0];
+        _y = pos[1];
+        _z = pos[2];
+    }
+};
+
+//A 3D vector containing forces in Newtons.
+class Force : public Position {
+    public:
+        Force():Position(){};
+        Force(float x, float y, float z):Position(x, y, z){}
+        Force(float* _vel):Position(_vel){}
 
     void operator=(Vector _v) override {
         _x = _v[0];

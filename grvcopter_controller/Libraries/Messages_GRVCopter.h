@@ -86,6 +86,8 @@ namespace MSG_GRVCOPTER {
 
     void pack_vel_message(float* vel, Message_Bytes* msg);
 
+    void pack_pwm_message(int num_motors, float* pwms, Message_Bytes* msg);
+
     void get_bytes_msg(Message_Bytes* msg, char *bytes_msg);
 
     void unpack_message(char* buffer, Message_Bytes* msg);

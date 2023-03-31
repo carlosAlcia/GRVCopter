@@ -1,5 +1,5 @@
 //Created by Carlos Álvarez Cía 2023
-
+#pragma once
 #include "Vector3.h"
 
 
@@ -38,6 +38,18 @@ class Attitude : public Vector{
     Attitude(float roll, float pitch, float yaw):Vector(roll, pitch, yaw){}
 
     Attitude(float* _pos):Vector(_pos){}
+
+    void operator=(Vector _v) override {
+        _x = _v[0];
+        _y = _v[1];
+        _z = _v[2];
+        }
+
+    void operator=(float* pos) override {
+        _x = pos[0];
+        _y = pos[1];
+        _z = pos[2];
+    }
 
     float& roll(){return _x;}
     float& pitch(){return _y;}
@@ -78,7 +90,33 @@ class Attitude : public Vector{
         return att;
     }
 
+    //@brief Get lean angles given a vector of forces. Used by non fully actuated UAV to move in XY plane.
+    //@param A 3D Vector of forces in Newtons and NED.
+    //@returns A 3D Vector of Attitude in degrees and NED.
+    static Attitude get_angles_from_forces(Vector v){
+        Attitude angles;
+        const float GRAVITY = 9.81;
+        angles.pitch() = from_rad_to_degrees(atanf(-v[0]/GRAVITY));
+        float cos_pitch = cosf(from_degrees_to_rad(angles.pitch()));
+        angles.roll() = from_rad_to_degrees(atanf(v[1]*cos_pitch/GRAVITY));
+        return angles;
+    }
 
+    void from_degrees_to_rad(){
+        *this = *this * (M_PI/180.0);
+    }
+
+    void from_rad_to_degrees(){
+        *this = *this / (M_PI*180.0);
+    }
+
+    static float from_degrees_to_rad(float _degrees){
+        return _degrees*M_PI/180.0;
+    }
+
+    static float from_rad_to_degrees(float _rad){
+        return _rad/M_PI*180.0;
+    }
 
 };
 
@@ -89,5 +127,63 @@ class Rate : public Attitude{
         Rate(float roll, float pitch, float yaw):Attitude(roll, pitch, yaw){}
 
         Rate(float* _rate):Attitude(_rate){}
+
+        void operator=(Vector _v) override {
+            _x = _v[0];
+            _y = _v[1];
+            _z = _v[2];
+        }
+
+        void operator=(float* pos) override {
+            _x = pos[0];
+            _y = pos[1];
+            _z = pos[2];
+        }
 };
+
+class Angular_Acceleration : public Attitude{
+    public:
+        Angular_Acceleration():Attitude(){}
+
+        Angular_Acceleration(float roll, float pitch, float yaw):Attitude(roll, pitch, yaw){}
+
+        Angular_Acceleration(float* _rate):Attitude(_rate){}
+
+        void operator=(Vector _v) override {
+        _x = _v[0];
+        _y = _v[1];
+        _z = _v[2];
+        }
+
+        void operator=(float* pos) override {
+            _x = pos[0];
+            _y = pos[1];
+            _z = pos[2];
+        }
+};
+
+
+class Torques : public Attitude{
+    public:
+        Torques():Attitude(){}
+
+        Torques(float roll, float pitch, float yaw):Attitude(roll, pitch, yaw){}
+
+        Torques(float* _rate):Attitude(_rate){}
+
+        void operator=(Vector _v) override {
+        _x = _v[0];
+        _y = _v[1];
+        _z = _v[2];
+        }
+
+        void operator=(float* pos) override {
+            _x = pos[0];
+            _y = pos[1];
+            _z = pos[2];
+        }
+
+};
+
+
 

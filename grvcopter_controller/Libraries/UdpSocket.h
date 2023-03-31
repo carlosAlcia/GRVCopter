@@ -1,6 +1,6 @@
 //Created by Carlos Álvarez Cía 2023
 
-
+#pragma once
 #include <arpa/inet.h>    
 #include <sys/types.h>
 #include <sys/socket.h>

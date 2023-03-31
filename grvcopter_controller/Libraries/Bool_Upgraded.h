@@ -31,6 +31,14 @@ class Ebool {
             _value = _new_value;
         }
 
+        bool rising_edge(){
+            return rise_edge;
+        }
+
+        bool falling_edge(){
+            return fall_edge;
+        }
+
         operator bool() const {
             return (_value==true);
         }
