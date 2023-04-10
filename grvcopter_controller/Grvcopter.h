@@ -7,6 +7,7 @@
 #include "Libraries/Common.h"
 #include "Libraries/Messages_GRVCopter.h"
 #include "Libraries/Controller.h"
+#include "Libraries/Logger.h"
 
 void thread_reception_f();
 

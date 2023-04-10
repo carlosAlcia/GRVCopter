@@ -93,6 +93,8 @@ void process_rc_msg(MSG_GRVCOPTER::Message_Bytes *msg){
 };
 
 void run_controller(){
+    extern LOG::Logger& logger;
+    logger.save_all_data();
     if (common.grvcopter_running()){
         common.check_mode();
         controller.run();

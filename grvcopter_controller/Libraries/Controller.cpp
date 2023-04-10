@@ -71,6 +71,12 @@ void Controller::run(){
 
     MSG_GRVCOPTER::get_bytes_msg(&msg, buffer);
     common.get_socket()->Send(buffer);
+
+    extern LOG::Logger& logger;
+    for (int i = 0; i < UAV::num_motors; i++){
+        logger.save_float_data("PWM" + std::to_string(i), pwms[i]);
+    }
+
     
 
 }

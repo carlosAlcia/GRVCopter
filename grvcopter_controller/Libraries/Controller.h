@@ -3,6 +3,7 @@
 #pragma once
 #include "Attitude_Controller.h"
 #include "Position_Controller.h"
+#include "Logger.h"
 #include "Mixer.h"
 #include "UAV.h"
 #include <iostream>
