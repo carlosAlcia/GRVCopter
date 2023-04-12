@@ -27,5 +27,9 @@ class Controller {
 
         void run();
 
+        void run_stabilize_control(Force& forces, Torques& torques);
+        void run_altitude_control(Force& forces, Torques& torques);
+        void run_position_control(Force& forces, Torques& torques);
+
         
 };

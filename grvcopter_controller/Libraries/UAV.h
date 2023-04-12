@@ -19,14 +19,6 @@ namespace UAV {
     static constexpr int MODE_STABILIZE = 1;
     static constexpr int MODE_ALTITUDE = 2;
     static constexpr int MODE_POSITION = 3;
-
-
-//     ors_6DoF:add_motor(0, 0.1344, 0.1684, -0.1841, 0.883, 0.1073, -0.4569, false, 1)
-//  Motors_6DoF:add_motor(1, 0.2130, -0.0321, 0.1841, 0.883, 0.3420, 0.3214, false, 2)
-//  Motors_6DoF:add_motor(2, 0.0787, -0.2006, -0.1841, 0.883, -0.4493, 0.1355, false, 3)
-//  Motors_6DoF:add_motor(3, -0.1344, -0.1684, 0.1841, 0.883, 0.1073, -0.4569, false, 4)
-//  Motors_6DoF:add_motor(4, -0.2130, 0.0321, -0.1841, 0.883, 0.3420, 0.3214, false, 5)
-//  Motors_6DoF:add_motor(5, -0.0787, 0.2006, 0.1841, 0.883, -0.4493, 0.1355, false, 6)
     
 
 

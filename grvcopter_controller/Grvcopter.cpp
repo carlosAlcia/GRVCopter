@@ -94,7 +94,10 @@ void process_rc_msg(MSG_GRVCOPTER::Message_Bytes *msg){
 
 void run_controller(){
     extern LOG::Logger& logger;
-    logger.save_all_data();
+    logger.save_att(common.get_current_attitude());
+    logger.save_des_att(common.get_target_attitude());
+    logger.save_des_pos(common.get_target_position());
+    logger.save_pos(common.get_current_position());
     if (common.grvcopter_running()){
         common.check_mode();
         controller.run();

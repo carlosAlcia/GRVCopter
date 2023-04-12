@@ -15,7 +15,7 @@ class PID {
         float _kp, _ki, _kd;
         float int_error {0.0};
         float error_a {0.0};
-        float max_i = 0.5;
+        float max_i = 100;
 
 
     public:

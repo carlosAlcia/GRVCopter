@@ -107,8 +107,20 @@ class Attitude : public Vector{
     }
 
     void from_rad_to_degrees(){
-        *this = *this / (M_PI*180.0);
+        *this = *this / (M_PI/180.0);
     }
+
+    static Attitude from_degrees_to_rad(Attitude _degrees){
+        Attitude att;
+        att = _degrees*(M_PI/180.0);
+        return att;
+    } 
+
+    static Attitude from_rad_to_degrees(Attitude _degrees){
+        Attitude att;
+        att = _degrees/(M_PI/180.0);
+        return att;
+    } 
 
     static float from_degrees_to_rad(float _degrees){
         return _degrees*M_PI/180.0;

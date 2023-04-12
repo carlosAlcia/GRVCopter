@@ -7,13 +7,13 @@
 
 class PositionControl {
     private:
-        PID pid_x_vel = PID(DEFAULT_KP_PID, DEFAULT_KI_PID, DEFAULT_KD_PID);
-        PID pid_y_vel = PID(DEFAULT_KP_PID, DEFAULT_KI_PID, DEFAULT_KD_PID);
-        PID pid_z_vel = PID(DEFAULT_KP_PID*5, DEFAULT_KI_PID, DEFAULT_KD_PID);
+        PID pid_x_vel = PID(DEFAULT_KP_PID, DEFAULT_KI_PID*0, DEFAULT_KD_PID*0);
+        PID pid_y_vel = PID(DEFAULT_KP_PID, DEFAULT_KI_PID*0, DEFAULT_KD_PID*0);
+        PID pid_z_vel = PID(DEFAULT_KP_PID, DEFAULT_KI_PID*1, DEFAULT_KD_PID*0);
 
         PID pid_x_pos = PID(DEFAULT_KP_PID, 0, 0);
         PID pid_y_pos = PID(DEFAULT_KP_PID, 0, 0);
-        PID pid_z_pos = PID(DEFAULT_KP_PID*5, 0, 0);
+        PID pid_z_pos = PID(DEFAULT_KP_PID, 0, 0);
 
     public:
         PositionControl(){}

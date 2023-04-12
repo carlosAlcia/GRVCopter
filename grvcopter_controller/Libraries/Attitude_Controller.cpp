@@ -3,7 +3,7 @@
 Angular_Acceleration AttitudeControl::run(Attitude* target, Attitude *current_att, Rate *current_rate){
     Attitude att_error;
     att_error = Vector::error(target, current_att);
-
+    att_error = att_error * 180/M_PI;
     //Compute rate desired:
     Rate rate_des_from_pid;
     rate_des_from_pid.roll() = pid_roll_ang.update_pid(att_error.roll());
