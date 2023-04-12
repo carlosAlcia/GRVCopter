@@ -127,7 +127,7 @@ namespace COMMON {
                 float ch_mode_value = rc.get_channel(CH_MODE);
                 if (ch_mode_value > 0.8)
                 {
-                    mode = UAV::MODE_STABILIZE;
+                    mode = UAV::MODE_POSITION;
                 }
                 else if ((ch_mode_value < 0.8) && (ch_mode_value > -0.8))
                 {
