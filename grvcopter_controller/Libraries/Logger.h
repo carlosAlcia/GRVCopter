@@ -13,7 +13,7 @@
 namespace LOG{
 
     static constexpr int NAME_SIZE = 28;
-    static constexpr unsigned short LOG_ITEM_SIZE = 14;
+    static constexpr unsigned short LOG_ITEM_SIZE = 10;
 
 
     union UINT16_BYTES {
@@ -22,8 +22,8 @@ namespace LOG{
     };
 
     union UINT64_BYTES {
-        uint64_t value;
-        char bytes[sizeof(uint64_t)];
+        uint32_t value;
+        char bytes[sizeof(uint32_t)];
     };
 
     union FLOAT_BYTES {
@@ -75,9 +75,9 @@ class Logger {
             file = fopen(file_name, "wb");
         }
 
-        uint64_t get_millis(){
+        uint32_t get_millis(){
             const std::chrono::time_point<std::chrono::steady_clock> now = std::chrono::steady_clock::now();
-            return std::chrono::duration_cast<std::chrono::milliseconds>(now-this->start).count();
+            return (uint32_t)std::chrono::duration_cast<std::chrono::milliseconds>(now-this->start).count();
         }
 
         void pack_log_item(uint8_t ID, float value, uint8_t* bytes){
@@ -86,15 +86,14 @@ class Logger {
             memcpy(bytes, log_item.LOG_ID.bytes, sizeof(unsigned short));
             // Copy the time:
             short offset = sizeof(unsigned short);
-            memcpy(bytes + offset, log_item.TIME.bytes, sizeof(int64_t));
+            memcpy(bytes + offset, log_item.TIME.bytes, sizeof(uint32_t));
             // Copy the data
-            offset += sizeof(int64_t);
+            offset += sizeof(uint32_t);
             memcpy(bytes + offset, log_item.DATA.bytes, sizeof(float));
         }
 
     public:
-        //Save data as tab separated data.
-        //Can be read in Matlab with: tdfread(FILE_NAME)
+
 
         void save_att(Attitude *att){
             Attitude att_degrees = Attitude::from_rad_to_degrees(*att);

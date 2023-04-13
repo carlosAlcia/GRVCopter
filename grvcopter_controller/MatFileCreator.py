@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 from tkinter import filedialog as fd
 filename = fd.askopenfilename()
 
