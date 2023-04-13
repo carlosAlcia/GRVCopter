@@ -36,12 +36,12 @@ void Controller::run(){
         break;
     }
 
-    logger.save_float_data("ForceX", force_xyz_n[0]);
-    logger.save_float_data("ForceY", force_xyz_n[1]);
-    logger.save_float_data("ForceZ", force_xyz_n[2]);
-    logger.save_float_data("TorqueRoll", torques_nm[0]);
-    logger.save_float_data("TorquePitch", torques_nm[1]);
-    logger.save_float_data("TorqueYaw", torques_nm[2]);
+    logger.save_float_data(LOG_C::FORCE_X_DES_ID, force_xyz_n[0]);
+    logger.save_float_data(LOG_C::FORCE_Y_DES_ID, force_xyz_n[1]);
+    logger.save_float_data(LOG_C::FORCE_Z_DES_ID, force_xyz_n[2]);
+    logger.save_float_data(LOG_C::TORQUE_ROLL_DES_ID, torques_nm[0]);
+    logger.save_float_data(LOG_C::TORQUE_PITCH_DES_ID, torques_nm[1]);
+    logger.save_float_data(LOG_C::TORQUE_YAW_DES_ID, torques_nm[2]);
 
 
     //Get force contribution of each motor with the mixer:
@@ -59,8 +59,8 @@ void Controller::run(){
     MSG_GRVCOPTER::get_bytes_msg(&msg, buffer);
     common.get_socket()->Send(buffer);
 
-    for (int i = 0; i < UAV::num_motors; i++){
-        logger.save_float_data("PWM" + std::to_string(i), pwms[i]);
+    for (uint8_t i = 0; i < UAV::num_motors; i++){
+        logger.save_float_data(LOG_C::PWM1_ID+i, pwms[i]);
     }
 
     
