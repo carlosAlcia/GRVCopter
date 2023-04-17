@@ -2,6 +2,7 @@
 
 #pragma once
 #include "Vector3.h"
+#include "Helper.h"
 
 class Position : public Vector{
     public: 
@@ -116,4 +117,12 @@ class Force : public Position {
         _y = pos[1];
         _z = pos[2];
     }
+
+    //@brief Limit the max force in XY required by the position controller.
+    //@param Value max in Newtons
+    void limit_to_xy(float max_force_xy){
+        this->x() = saturation(this->x(), -max_force_xy, max_force_xy);
+        this->y() = saturation(this->y(), -max_force_xy, max_force_xy);
+    }
+
 };

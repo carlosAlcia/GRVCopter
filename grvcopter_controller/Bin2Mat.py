@@ -41,18 +41,13 @@ data_values = []
 for i in range(len(names)):
     data_values.append(i)
 
-# with open(filename, 'rb') as f:
-#     print(f.read(150))
-
-# asdfasgaersg
-
-#Crear el .mat, mismo nombre pero con Matlab.mat al final
 new_filename = filename.replace(".bin", "Matlab.Mat")
 
 with  open(new_filename, "w") as to_file:
     to_file.write("Time \t")
     for data_name in names.keys():
         to_file.write(data_name + "\t")
+    to_file.write("\n")
     with open(filename, 'rb') as f:
         time_first = 0
         Time = 0
@@ -63,9 +58,6 @@ with  open(new_filename, "w") as to_file:
                     byteID = f.read(2)
                     byteTime = f.read(4)
                     byteValue = f.read(4)
-                    # print(byteID)
-                    # print(byteTime)
-                    # print(byteValue)
                 except EOFError:
                     EndOfFile = True
                     break
@@ -75,10 +67,6 @@ with  open(new_filename, "w") as to_file:
                 Id = struct.unpack('H', byteID)[0]
                 Time = struct.unpack('<L', byteTime)[0]
                 Value = struct.unpack('f', byteValue)[0]
-                # print(Id)
-                # print(Time)
-                # print(Value)
-                # print("Arriba datos convertidos")
                 index = 0
                 for IDs in names.values():
                     index = index+1
@@ -90,7 +78,7 @@ with  open(new_filename, "w") as to_file:
             time_first = Time
             text = ""
             for value in data_values:
-                text = text + "\t" + str(value)
+                text = text + str(value) + "\t"
             text = text + "\n"
             to_file.write(text)
 

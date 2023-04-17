@@ -84,6 +84,7 @@ void Controller::run_stabilize_control(Force& forces, Torques& torques){
 }
 
 void Controller::run_position_control(Force& forces, Torques& torques){
+    compute_targets_from_rc_pos_control();
     Acceleration accel_xyz_mss;
     Force force_xyz_n;
     Torques torques_nm;
@@ -97,12 +98,15 @@ void Controller::run_position_control(Force& forces, Torques& torques){
         //Rotate forces from fixed frame to UAV frame:
         force_xyz_n.rotate_to_uav_frame(common.get_current_attitude()->yaw());
         force_xyz_n.from_NED_to_NEU();
+        force_xyz_n.limit_to_xy(1000);
     } 
     
     //Compute the desired attitude from the position controller.
     Attitude attitude_from_position_controller;
     if (!UAV::fully_actuated) {
         attitude_from_position_controller = Attitude::get_angles_from_forces(force_xyz_n);
+        //Limit lean angle to UAV::max_lean_angle.
+        attitude_from_position_controller = Attitude::limit_lean_angle(attitude_from_position_controller, UAV::max_lean_angle);
     }
 
     //Compute the desired angular acceleration.
@@ -120,6 +124,7 @@ void Controller::run_position_control(Force& forces, Torques& torques){
 }
 
 void Controller::run_altitude_control(Force& forces, Torques& torques){
+    compute_targets_from_rc_alt_control();
     Acceleration accel_xyz_mss;
     Force force_xyz_n;
     Torques torques_nm;
@@ -134,15 +139,25 @@ void Controller::run_altitude_control(Force& forces, Torques& torques){
         force_xyz_n.rotate_to_uav_frame(common.get_current_attitude()->yaw());
         force_xyz_n.from_NED_to_NEU();
     } 
-    
-    //Cancel XY forces, only altitude control:
-    force_xyz_n[0] = 0.0;
-    force_xyz_n[1] = 0.0;
 
     //Compute the desired angular acceleration.
     Angular_Acceleration ang_accel_des;
-    ang_accel_des = attitude_control.run(common.get_target_attitude(), common.get_current_attitude(), common.get_current_rate());
 
+    if (UAV::fully_actuated){
+        //Transform target attitude to XY forces:
+        Force from_angles;
+        from_angles = Attitude::get_forces_by_angles(*common.get_target_attitude());
+        force_xyz_n.x() = from_angles[0];
+        force_xyz_n.y() = from_angles[1];
+        //TODO falta poner a 0 roll y pitch de target attitude, o pasarle un nuevo vector con solo el yaw.
+        ang_accel_des = attitude_control.run(common.get_target_attitude(), common.get_current_attitude(), common.get_current_rate());
+
+    } else {
+        //Cancel XY forces, only altitude control:
+        force_xyz_n[0] = 0.0;
+        force_xyz_n[1] = 0.0;
+        ang_accel_des = attitude_control.run(common.get_target_attitude(), common.get_current_attitude(), common.get_current_rate());
+    }
     //Compute the desired torques given the UAV inertia
     torques_nm = ang_accel_des*UAV::inertia_kg_m2;
     
@@ -150,4 +165,25 @@ void Controller::run_altitude_control(Force& forces, Torques& torques){
 
     forces = force_xyz_n;
     torques = torques_nm;
+}
+
+void Controller::compute_targets_from_rc_pos_control(){
+    RC* rc = common.get_rc();
+    float Z_speed_NED = -rc->get_throttle();
+    Position* target = common.get_target_position();
+    target->z() = target->z() + Z_speed_NED*DT;
+    target->x() = target->x() + rc->get_channel(CH_PITCH)*DT;
+    target->y() = target->y() + rc->get_channel(CH_ROLL)*DT;
+}
+
+void Controller::compute_targets_from_rc_alt_control(){
+    RC* rc = common.get_rc();
+    float Z_speed_NED = -rc->get_throttle();
+    Position* target = common.get_target_position();
+    target->z() = target->z() + Z_speed_NED*DT;
+    
+    Attitude* att_target = common.get_target_attitude();
+    att_target->roll() = UAV::max_lean_angle*rc->get_channel(CH_ROLL);
+    att_target->pitch() = UAV::max_lean_angle*rc->get_channel(CH_PITCH);
+
 }

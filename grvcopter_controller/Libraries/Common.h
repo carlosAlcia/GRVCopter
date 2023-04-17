@@ -109,7 +109,7 @@ namespace COMMON {
 
             void get_target_position(Position &pos){pos = target_position;}; 
             Position* get_target_position(){return &target_position;};
-
+            float get_target_z(){return target_position.z();};
 
             void get_current_attitude(Attitude &att){att = current_attitude;}; 
             Rate* get_current_rate(){return &current_rate;}; 

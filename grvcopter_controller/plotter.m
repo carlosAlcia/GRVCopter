@@ -15,36 +15,36 @@
 % grid minor 
 % legend("Fx", "Fy", "Fz");
 
-figure
-plot(Time, ForceX)
-hold on
-plot(Time, ForceY)
-plot(Time, ForceZ)
-title("Forces")
-grid minor 
-legend("Fx", "Fy", "Fz");
+% figure
+% plot(Time, ForceX)
+% hold on
+% plot(Time, ForceY)
+% plot(Time, ForceZ)
+% title("Forces")
+% grid minor 
+% legend("Fx", "Fy", "Fz");
 
 
 figure
-plot(Time, Pos_X)
+plot(Time, POS_X_ID)
 hold on 
-plot(Time, Des_Pos_X)
+plot(Time, DES_POS_X_ID)
 title("PosX")
 grid minor 
 legend("Real", "Target");
 
 figure
-plot(Time, Pos_Y)
+plot(Time, POS_Y_ID)
 hold on 
-plot(Time, Des_Pos_Y)
+plot(Time, DES_POS_Y_ID)
 title("PosY")
 grid minor 
 legend("Real", "Target");
 
 figure
-plot(Time, Pos_Z)
+plot(Time, POS_Z_ID)
 hold on 
-plot(Time, Des_Pos_Z)
+plot(Time, DES_POS_Z_ID)
 title("PosZ")
 grid minor 
 legend("Real", "Target");
@@ -89,25 +89,25 @@ legend("Real", "Target");
 % legend("Torque Y", "Yaw")
 
 figure
-plot(Time, Roll)
+plot(Time, ROLL_ID)
 hold on 
-plot(Time, Des_Roll)
+plot(Time, DES_ROLL_ID)
 title("Roll")
 grid minor 
 legend("Real", "Target");
 
 figure
-plot(Time, Pitch)
+plot(Time, PITCH_ID)
 hold on 
-plot(Time, Des_Pitch)
+plot(Time, DES_PITCH_ID)
 title("Pitch")
 grid minor 
 legend("Real", "Target");
 
 figure
-plot(Time, Yaw)
+plot(Time, YAW_ID)
 hold on 
-plot(Time, Des_Yaw)
+plot(Time, DES_YAW_ID)
 title("Yaw")
 grid minor 
 legend("Real", "Target");

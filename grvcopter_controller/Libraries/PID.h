@@ -3,6 +3,8 @@
 
 #pragma once
 #include "Helper.h"
+#include "math.h"
+#include "iostream"
 
 static constexpr float DEFAULT_KP_PID = 1;
 static constexpr float DEFAULT_KI_PID = 1;
@@ -15,8 +17,11 @@ class PID {
         float _kp, _ki, _kd;
         float int_error {0.0};
         float error_a {0.0};
-        float max_i = 100;
-
+        float max_i = 10;
+        float error_a_filtered = {0.0};
+        float last_der_error {0.0};
+        const int num_samples = 5;
+        int sample = 0;
 
     public:
         PID(float kp, float ki, float kd){
@@ -31,12 +36,7 @@ class PID {
         //@returns [float] The PID action.
         float update_pid(float target, float current){
             float error = target - current;
-            int_error += error*DT;
-            saturation(int_error, -max_i, max_i);
-            float der_error = (error-error_a)/DT;
-            float out_controller = _kp*error + _ki*int_error + _kd*der_error;
-            error_a = error;
-            return out_controller;
+            return update_pid(error);
         }
 
         //@brief Function to compute the PID action.
@@ -45,9 +45,15 @@ class PID {
         float update_pid(float error){
             int_error += error*DT;
             saturation(int_error, -max_i, max_i);
-            float der_error = (error-error_a)/DT;
-            float out_controller = _kp*error + _ki*int_error + _kd*der_error;
-            error_a = error;
+            last_der_error = error - error_a_filtered;
+            float out_controller = _kp*error + _ki*int_error + _kd*last_der_error;
+            error_a += error/num_samples;
+            sample--;
+            if (sample <= 0){
+                error_a_filtered = error_a;
+                error_a = 0.0;
+                sample = num_samples;
+            }
             return out_controller;
         }
 
@@ -55,6 +61,10 @@ class PID {
         void reset_i(){
             int_error = 0.0;
         }
+
+        float get_I(){return int_error;}
+
+        float get_Der(){return error_a_filtered;}
 
         //@brief Function to get or set the kp.
         float& kp(){return _kp;}

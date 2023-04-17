@@ -1,6 +1,7 @@
 //Created by Carlos Álvarez Cía 2023
 #pragma once
 #include "Vector3.h"
+#include "Helper.h"
 
 
 class Quaternion {
@@ -99,6 +100,25 @@ class Attitude : public Vector{
         angles.pitch() = from_rad_to_degrees(atanf(-v[0]/GRAVITY));
         float cos_pitch = cosf(from_degrees_to_rad(angles.pitch()));
         angles.roll() = from_rad_to_degrees(atanf(v[1]*cos_pitch/GRAVITY));
+        return angles;
+    }
+
+    static Vector get_forces_by_angles(Attitude v){
+        Vector forces;
+        const float GRAVITY = 9.81;
+        forces[0] = tanf(from_degrees_to_rad(-v[1]))*GRAVITY;
+        forces[1] = tanf(from_degrees_to_rad(-v[0]))*GRAVITY;
+        return forces;
+    }
+
+    //@brief Limit lean angle to a defined max. Used by non fully actuated UAV to move in XY plane.
+    //@param A 3D Vector of lean angles.
+    //@param The max value of angle.
+    //@returns A 3D Vector of Attitude in degrees and NED.
+    static Attitude limit_lean_angle(Vector v, float max_angle){
+        Attitude angles;
+        angles.roll() = saturation(v[0], -max_angle, max_angle);
+        angles.pitch() = saturation(v[1], -max_angle, max_angle);
         return angles;
     }
 

@@ -32,9 +32,6 @@ int main(){
 
     thread thread_reception = thread(&thread_reception_f);
 
-    
-
-      //Desde este hilo no se pueden hacer llamadas a gcs().
     while (true) {
         auto x = std::chrono::steady_clock::now() + std::chrono::milliseconds(INTERVAL_CONTROLLER);
         run_controller();

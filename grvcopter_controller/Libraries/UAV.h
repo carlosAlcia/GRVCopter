@@ -19,6 +19,8 @@ namespace UAV {
     static constexpr int MODE_STABILIZE = 1;
     static constexpr int MODE_ALTITUDE = 2;
     static constexpr int MODE_POSITION = 3;
+
+    static constexpr float max_lean_angle = 15.0; //Value in degrees.
     
 
 

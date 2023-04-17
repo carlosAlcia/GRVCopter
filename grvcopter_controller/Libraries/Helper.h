@@ -1,9 +1,10 @@
 #pragma once
 
-
+#include "math.h"
 //@brief Function to saturate a value between a min and max.
 //@param Value: value to saturate passed by reference. The result will be stored here.
 //@param min: Lower value.
+//@param max: Higher value.
 //@return true if reached saturation.
 template <typename T, typename P>
 static bool saturation(P& value, T min, T max){
@@ -17,6 +18,23 @@ static bool saturation(P& value, T min, T max){
         saturated = true;
     }
     return saturated;
+}
+
+//@brief Function to saturate a value between a min and max.
+//@param Value: value to saturate passed by copy.
+//@param min: Lower value.
+//@param max: Higher value.
+//@return Value between min and max.
+template <typename T>
+static T saturation(T value, T min, T max){
+    T value_saturated = value;
+    if (value > max){
+        value_saturated = max;
+    }
+    if (value < min){
+        value_saturated = min;
+    }
+    return value_saturated;
 }
 
 //@brief Function to normalize a vector between -1:1.
@@ -42,3 +60,10 @@ static void normalize_sign(T* values, int size){
     }
     
 }
+
+template <typename T>
+static T sign(T value){
+    return value/abs(value);
+}
+
+
