@@ -64,6 +64,9 @@ void process_msg(char* buf){
     case RC_MSG_ID:
         process_rc_msg(&msg);
         break;
+    case PID_CONSTANT_CHANGE_MSG_ID:
+        process_pid_constant_change_msg(&msg);
+        break;
     default:
         break;
     }
@@ -88,6 +91,10 @@ void process_vel_msg(MSG_GRVCOPTER::Message_Bytes *msg){
 void process_rc_msg(MSG_GRVCOPTER::Message_Bytes *msg){
     common.update_rc(&(msg->DATA[0].value));
 };
+
+void process_pid_constant_change_msg(MSG_GRVCOPTER::Message_Bytes *msg){
+    common.get_params()->change_pid_constant(msg->DATA[0].value, msg->DATA[1].value);
+}
 
 void run_controller(){
     extern LOG::Logger& logger;

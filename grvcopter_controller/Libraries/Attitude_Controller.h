@@ -45,6 +45,30 @@ class AttitudeControl {
             pid_yaw_rate.reset_i();
         }
 
+        PID* get_roll_ang_pid(){
+            return &pid_roll_ang;
+        }
+
+        PID* get_pitch_ang_pid(){
+            return &pid_roll_ang;
+        }
+
+        PID* get_yaw_ang_pid(){
+            return &pid_roll_ang;
+        }
+
+        PID* get_roll_rate_pid(){
+            return &pid_roll_rate;
+        }
+
+        PID* get_pitch_rate_pid(){
+            return &pid_pitch_rate;
+        }
+
+        PID* get_yaw_rate_pid(){
+            return &pid_pitch_rate;
+        }
+
         Angular_Acceleration run(Attitude* target, Attitude *current_att, Rate *current_rate);
 
 };

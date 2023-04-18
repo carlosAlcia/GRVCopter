@@ -47,6 +47,30 @@ class PositionControl {
             pid_z_pos.reset_i();
         }
 
+        PID* get_x_pos_pid(){
+            return &pid_x_pos;
+        }
+
+        PID* get_y_pos_pid(){
+            return &pid_y_pos;
+        }
+
+        PID* get_z_pos_pid(){
+            return &pid_z_pos;
+        }
+
+        PID* get_x_vel_pid(){
+            return &pid_x_vel;
+        }
+
+        PID* get_y_vel_pid(){
+            return &pid_y_vel;
+        }
+
+        PID* get_z_vel_pid(){
+            return &pid_z_vel;
+        }
+
         //@brief Compute the desired forces in each axis given a target position and the current position.
         //@param Position* target in m.
         //@param Position* current in m.

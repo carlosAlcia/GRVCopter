@@ -47,6 +47,12 @@ namespace MSG_GRVCOPTER {
         //Z
     static constexpr unsigned short VEL_MSG_ID = 6;
 
+    //DATA:
+        //ID of the constant to change.
+        //New Value.
+    static constexpr unsigned short PID_CONSTANT_CHANGE_MSG_ID = 7;
+    
+
 
     static constexpr unsigned short MAX_NUM_CHANNEL = 14;
     static constexpr unsigned short MSG_DATA_LENGTH = 15;

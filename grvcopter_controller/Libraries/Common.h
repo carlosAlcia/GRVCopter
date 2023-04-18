@@ -8,6 +8,7 @@
 #include "RC.h"
 #include "Bool_Upgraded.h"
 #include "UdpSocket.h"
+#include "Parameters.h"
 #include "UAV.h"
 #include <iostream>
 
@@ -35,6 +36,7 @@ namespace COMMON {
 
             int mode = 0;
 
+            PARAMS::Params* params;
             
 
 
@@ -48,6 +50,10 @@ namespace COMMON {
 
             UDP::UDP_Socket* get_socket(){
                 return sock;
+            }
+
+            PARAMS::Params* get_params(){
+                return params;
             }
 
             void update_current_position(float *_pos){
@@ -137,12 +143,15 @@ namespace COMMON {
                 {
                     mode = UAV::MODE_STABILIZE;
                 }
-
             }
 
             int get_mode(){
                 return mode;
             }
+
+            
+
+
  
 
     };

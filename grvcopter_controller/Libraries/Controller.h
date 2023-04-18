@@ -32,8 +32,10 @@ class Controller {
         void run_altitude_control(Force& forces, Torques& torques);
         void run_position_control(Force& forces, Torques& torques);
 
+        void compute_targets_from_rc_stabilize_control();
         void compute_targets_from_rc_pos_control();
         void compute_targets_from_rc_alt_control();
+        void compute_yaw_target_from_rc();
 
 
         

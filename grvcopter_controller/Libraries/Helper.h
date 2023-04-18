@@ -66,4 +66,31 @@ static T sign(T value){
     return value/abs(value);
 }
 
+//@brief Function to apply a dead band to a value. If the value pass is not greater than the margins value (in absolute value), returns a 0.0.
+//If it is greater, return the value.
+//@param Value: Value to apply the dead band.
+//@param Margins: Value to determine the dead band width.
+//@returns The value after applied the dead band.
+template<typename T>
+static T dead_band(T value, T margins){
+    T result = value;
+    if (abs(value) < margins){
+        result = 0.0;
+    }
+    return result;
+}
 
+
+//@brief Function to apply a dead band to a value. If the value pass is between the margins value around the offset, returns the offset.
+//If not, return the value.
+//@param Value: Value to apply the dead band.
+//@param Margins: Value to determine the dead band width.
+//@returns The value after applied the dead band.
+template<typename T>
+static T dead_band(T value, T margins, T offset){
+    T result = value;
+    if ((abs(value-offset)) < margins){
+        result = offset;
+    }
+    return result;
+}

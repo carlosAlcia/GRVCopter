@@ -22,6 +22,7 @@ namespace UAV {
 
     static constexpr float max_lean_angle = 15.0; //Value in degrees.
     
+    static constexpr float dead_band_width_yaw_rc = 0.1; 
 
 
 }

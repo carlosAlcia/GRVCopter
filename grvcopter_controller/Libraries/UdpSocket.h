@@ -33,6 +33,8 @@ namespace UDP{
                 remote_adr.sin_family = AF_INET; 
                 inet_aton(ip, &remote_adr.sin_addr);
                 remote_adr.sin_port = htons(PORT);
+                
+                print_ipv4();
             }
 
             int Receive(char *buffer){
@@ -47,6 +49,20 @@ namespace UDP{
                 sendto(sock, "ping", sizeof("ping"), 0, (struct sockaddr *)&remote_adr, size);
             }
 
+        private:
+            void print_ipv4()
+                {
+                struct sockaddr_in adr{};
+                socklen_t local_sinlen = sizeof(adr);
+                getsockname(sock, (struct sockaddr*)&adr, &local_sinlen);
+                char ip[INET_ADDRSTRLEN];
+                uint16_t port;
+                
+                inet_ntop (AF_INET, (void *)&adr.sin_addr, ip, sizeof (ip));
+                port = htons (adr.sin_port);
+                
+                printf ("Socket Address: %s:%d\n", ip, port);
+                }
 
     };
 
