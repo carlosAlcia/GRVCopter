@@ -1,0 +1,16 @@
+#!/bin/bash
+
+Verde='\033[32m'
+NC='\033[39m'
+for i in Libraries/*.cpp
+do
+    printf "${NC}Compiling: ${i}\n"
+    gcc -c -o ${i%.cpp}.o ${i%}
+    printf "${Verde}Compiled ${i%}\n\n";
+done
+
+g++ -o Grvcopter Grvcopter.cpp Libraries/*.o -lpthread
+printf "${Verde}End of build\n\n";
+
+
+
