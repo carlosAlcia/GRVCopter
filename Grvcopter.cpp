@@ -16,7 +16,7 @@ void thread_reception_f(){
 
 int main(){
 
-    cout << "GRVCopter 1.0" << endl;
+    cout << "GRVCopter 1.1 Dev" << endl;
     cout << "Carlos Álvarez Cía 2023" << endl;
     cout << "\n" << endl;
     cout << "Enter UAV IP" << endl;
