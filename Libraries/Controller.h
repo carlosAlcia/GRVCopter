@@ -56,12 +56,12 @@ class Controller {
             mixer.set_z_factors(UAV::z_factor);
 
             //Nuevo mixer físico:
-            mixer_physical.set_roll_factors(UAV::roll_factor);
-            mixer_physical.set_pitch_factors(UAV::pitch_factor);
-            mixer_physical.set_yaw_factors(UAV::yaw_factor);
-            mixer_physical.set_x_factors(UAV::x_factor);
-            mixer_physical.set_y_factors(UAV::y_factor);
-            mixer_physical.set_z_factors(UAV::z_factor);
+            mixer_physical.set_roll_factors(UAV::roll_factor_fis);
+            mixer_physical.set_pitch_factors(UAV::pitch_factor_fis);
+            mixer_physical.set_yaw_factors(UAV::yaw_factor_fis);
+            mixer_physical.set_x_factors(UAV::x_factor_fis);
+            mixer_physical.set_y_factors(UAV::y_factor_fis);
+            mixer_physical.set_z_factors(UAV::z_factor_fis);
         }
 
         void run();

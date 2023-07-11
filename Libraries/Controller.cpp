@@ -76,11 +76,15 @@ void Controller::run(){
     Mixer::force_to_pwm(force_motor, pwms);
 
     //Nuevo para mixer fisico:
+    force_xyz_n.x() *= 0.5;
+    force_xyz_n.y() *= 0.5;
+    torques_nm = torques_nm * 0.1;
+    torques_nm.yaw() *= 1.5;
     force_xyz_n.z() *= 32.5;//Valor sacado experimentalmente para tener un valor equivalente de pwm con los dos mixers. 
     //Deberá verse reflejado en las constantes del controlador.
     float force_motor_phys[UAV::num_motors]{0.0};
     Mixer_Physical::get_forces_each_motor(&mixer_physical, &force_xyz_n, &torques_nm, force_motor_phys);
-    int pwms_physical[UAV::num_motors]{0.0};
+    int pwms_physical[UAV::num_motors]{0};
     mixer_physical.force_to_pwm(force_motor_phys, pwms_physical);
     //Fin nuevo mixer fisico.
 
@@ -97,7 +101,7 @@ void Controller::run(){
 
     //To log fisicos PWMs:
     for (uint8_t i = UAV::num_motors; i < (UAV::num_motors*2); i++){
-        logger.save_float_data(LOG_C::PWM1_ID+i, pwms_physical[i]);
+        logger.save_float_data(LOG_C::PWM1_ID+i, pwms_physical[i-UAV::num_motors]);
     }
 
 }

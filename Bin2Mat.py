@@ -34,6 +34,7 @@ names = {
     "PWM10_ID ": 27,
     "PWM11_ID ": 28,
     "PWM12_ID ": 29,
+    "LAST" : 30,
 }
 
 
@@ -72,7 +73,10 @@ with  open(new_filename, "w") as to_file:
                     index = index+1
                     if Id == IDs:
                         break
-                data_values[index] = Value
+                #Nuevo el if. La siguiente línea estaba alineada con la siguiente.
+                if (index >= 0 and index < len(names)):
+                    print(str(index) + "\n")
+                    data_values[index] = Value
                 data_values[0] = time_first
             #Mas de 8 milisegundos, otro bloque de datos
             time_first = Time
