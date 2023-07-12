@@ -1,4 +1,5 @@
 #include "Position_Controller.h"
+#include "UAV.h"
 
 Acceleration PositionControl::run(Position *target, Position *current, Position *current_vel){
     
@@ -7,7 +8,6 @@ Acceleration PositionControl::run(Position *target, Position *current, Position 
     error_p = Position::error(target, current);
     //Limit max error to avoid aggressive control.
     error_p.apply_limits(0.2, 0.2, 0.2);
-    //error_p.z() = saturation(error_p.z(), (float)-0.5, (float)0.05);
 
     //Compute linear velocities desired:
     Velocity vel_des_from_pid;
@@ -18,10 +18,10 @@ Acceleration PositionControl::run(Position *target, Position *current, Position 
     //std::cout << "Target Altitude: " << target->z() << "Error: " << error_p.z() << std::endl;
 
     Acceleration feedforward;
-    feedforward = vel_des_from_pid;
+    feedforward = vel_des_from_pid*Vector(0.5, 0.5, 1.0);
 
-    //Units in cm/s
-    vel_des_from_pid.apply_limits(10.0, 10.0, 10.0);
+    //Units in m/s
+    vel_des_from_pid.apply_limits(10.0, 10.0, 0.2);
 
     //Compute linear accelerations desired:
     Velocity error_v;
@@ -40,7 +40,7 @@ Acceleration PositionControl::run(Position *target, Position *current, Position 
 
     //Units in cm/s²
     accel_des_from_pid = accel_des_from_pid + feedforward;
-    accel_des_from_pid.apply_limits(20.0, 20.0, 10.0);
+    accel_des_from_pid.apply_limits(20.0, 20.0, GRAVITY*1.5);
 
     //std::cout << "Accel Z desired: " << accel_des_from_pid.z() << "    Error: " << error_p.z() << std::endl;
 

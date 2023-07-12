@@ -56,7 +56,11 @@ namespace PARAMS
     static constexpr short unsigned int kd_y_vel_id = 22;
     static constexpr short unsigned int kd_z_vel_id = 23;
 
-    static constexpr short unsigned int number_params = 24;
+    //Factor for throttle to force in Z in stabilize mode.
+    //May change for each UAV.
+    static constexpr short unsigned int factor_throttle_to_fz = 24;
+
+    static constexpr short unsigned int number_params = 25;
 
     static const char *params_names[] = {
         "Roll_ang_P", "Pitch_ang_P", "Yaw_ang_P",
@@ -66,7 +70,8 @@ namespace PARAMS
         "X_pos_P", "Y_pos_P", "Z_pos_P",
         "X_vel_P", "Y_vel_P", "Z_vel_P",
         "X_vel_I", "Y_vel_I", "Z_vel_I",
-        "X_vel_D", "Y_vel_D", "Z_vel_D"};
+        "X_vel_D", "Y_vel_D", "Z_vel_D", 
+        "FACTOR_THRT_2_FZ"};
 
     class Params
     {
@@ -81,14 +86,14 @@ namespace PARAMS
         std::ofstream file;
         std::ifstream file_in;
 
-        float params_values[24]{8.0, 8.0, 2.0,
+        float params_values[number_params]{8.0, 8.0, 2.0,
                                  0.15, 0.15, 0.1,
                                  0.001, 0.001, 0.05,
                                  0.01, 0.01, 0.01,
                                  10.0, 10.0, 1.0,
                                  5.0, 5.0, 1.0,
                                  0.05, 0.05, 1.0,
-                                 0.05, 0.05, 0.0};
+                                 0.05, 0.05, 0.0, 8.125};
 
         bool param_changed = false;
 

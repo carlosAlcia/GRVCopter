@@ -45,6 +45,8 @@ class Controller {
         //Altitude Z of the terrain. Set when the UAV arms.
         float z_terrain = 0.0;
 
+        //Factor to convert from throttle to force Z.
+        float factor_thr_fz = 1.0;
 
     public: 
         Controller(){
@@ -79,6 +81,7 @@ class Controller {
         void set_hover_throttle();
 
         void set_z_terrain();
+        void set_factor_throttle_to_fz();
 
 
         

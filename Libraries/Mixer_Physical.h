@@ -202,7 +202,7 @@ public:
         }
     } 
 
-    void force_to_pwm(float *forces_each_motor, int* pwms){
+    void force_to_pwm(float *forces_each_motor, float* pwms){
         for (int i = 0; i < UAV::num_motors; i++){
             float force = forces_each_motor[i];
             float pwm_float = coeff_thrust_to_pwm[0]*pow(force, 2) + coeff_thrust_to_pwm[1]*force + coeff_thrust_to_pwm[2]; 

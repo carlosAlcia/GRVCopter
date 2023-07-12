@@ -14,7 +14,7 @@ class AttitudeControl {
         PID pid_pitch_rate = PID(DEFAULT_KP_PID*0.15, DEFAULT_KI_PID*0.001, DEFAULT_KD_PID*0.01, 1);
         PID pid_yaw_rate = PID(DEFAULT_KP_PID*0.1, DEFAULT_KI_PID*0.05, DEFAULT_KD_PID*0.01, 1);
 
-        float FF = M_PI/180; //Feedforward factor.
+        float FF = (M_PI/180)*0.15; //Feedforward factor.
 
     public:
         AttitudeControl(){}

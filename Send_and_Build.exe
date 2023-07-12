@@ -1,0 +1,12 @@
+#!/bin/bash
+scp -r GRVCopter/ pi@murphy.local:/home/pi/Grvcopter
+
+scp Grvcopter.* pi@murphy.local:/home/pi/Grvcopter/grvcopter_controller/
+scp Libraries/*.h pi@murphy.local:/home/pi/Grvcopter/grvcopter_controller/Libraries/
+scp Libraries/*.cpp pi@murphy.local:/home/pi/Grvcopter/grvcopter_controller/Libraries/
+ssh pi@murphy.local
+
+./Grvcopter/BuildGRVCOPTER.exe
+
+
+

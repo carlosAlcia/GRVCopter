@@ -2,7 +2,7 @@
 #include "Vector3.h"
 
 namespace UAV {
-    static constexpr float mass_kg = 4.0; //Kg
+    static constexpr float mass_kg = 2.5; //Kg
     static const Vector inertia_kg_m2 = Vector(0.3, 0.3, 0.17);
     
     static constexpr int num_motors = 6;

@@ -72,10 +72,10 @@ class PositionControl {
         }
 
         //@brief Compute the desired forces in each axis given a target position and the current position.
-        //@param Position* target in m.
-        //@param Position* current in m.
-        //@param Position* current_vel : Current vel in m/s.
-        //@returns Acceleration forces = PID(Target-Current). 
+        //@param Position* target in m and NED.
+        //@param Position* current in m and NED.
+        //@param Position* current_vel : Current vel in m/s and NED.
+        //@returns Acceleration forces = PID + FF. 
         Acceleration run(Position *target, Position *current, Position* current_vel);
 
 };
