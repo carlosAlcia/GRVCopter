@@ -18,15 +18,15 @@ Acceleration PositionControl::run(Position *target, Position *current, Position 
     //std::cout << "Target Altitude: " << target->z() << "Error: " << error_p.z() << std::endl;
 
     Acceleration feedforward;
-    feedforward = vel_des_from_pid*Vector(0.5, 0.5, 1.0);
+    feedforward = vel_des_from_pid*Vector(0.5, 0.5, 4.0);
 
     //Units in m/s
-    vel_des_from_pid.apply_limits(10.0, 10.0, 0.2);
+    vel_des_from_pid.apply_limits(10.0, 10.0, 0.8);
 
     //Compute linear accelerations desired:
     Velocity error_v;
     error_v = Velocity::error(&vel_des_from_pid, current_vel);
-
+    error_v.apply_limits(0.5, 0.5, 0.8);
     //std::cout << "Vel Z desired: " << vel_des_from_pid.z() << "Error: " << error_p.z() << std::endl;
 
     
