@@ -50,7 +50,8 @@ class PID {
         //@param error: [float]
         //@returns [float] The PID action.
         float update_pid(float error){
-            int_error += error*DT;
+            
+            int_error += dead_band(error, (float)0.01)*DT;
             saturation_and_check(int_error, -max_i, max_i);
             last_der_error = error - error_a_filtered;
             float out_controller = _kp*error + _ki*int_error + _kd*last_der_error;

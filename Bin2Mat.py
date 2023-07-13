@@ -34,7 +34,21 @@ names = {
     "PWM10_ID ": 27,
     "PWM11_ID ": 28,
     "PWM12_ID ": 29,
-    "LAST" : 30,
+    "INT_POS_X" : 30,
+    "INT_POS_Y" : 31,
+    "INT_POS_Z" : 32,
+    "INT_ANG_R" : 33,
+    "INT_ANG_P" : 34,
+    "INT_ANG_Y" : 35,
+    "VEL_DES_X" : 36,
+    "VEL_DES_Y" : 37,
+    "VEL_DES_Z" : 38,
+    "VEL_CUR_X" : 39,
+    "VEL_CUR_Y" : 40,
+    "VEL_CUR_Z" : 41,
+    #This last one is needed to correctly convert to .mat. 
+    #Increment the ID when add a new log item.
+    "LAST" : 42,
 }
 
 

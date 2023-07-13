@@ -21,6 +21,8 @@ void Controller::run(){
         attitude_control.reset_pids();
         set_offset_angles();
         set_z_terrain();
+        //This is a param that can be changed only when arming. If in a future are more params like this, add in a new function called:
+        //update_params_on_arming().
         set_factor_throttle_to_fz();
         std::cout << "Armed" << std::endl;
     }
@@ -29,12 +31,17 @@ void Controller::run(){
         std::cout << "Disarmed" << std::endl;
     }
 
+    //This params can be changed in flight.
     PARAMS::Params* params = common.get_params();
     if (params->check_param_changed()){
         params->update_angle_pid_constants(attitude_control.get_roll_ang_pid(), attitude_control.get_pitch_ang_pid(), attitude_control.get_yaw_ang_pid());
         params->update_rate_pid_constants(attitude_control.get_roll_rate_pid(), attitude_control.get_pitch_rate_pid(), attitude_control.get_yaw_rate_pid());
         params->update_pos_pid_constants(position_control.get_x_pos_pid(), position_control.get_y_pos_pid(), position_control.get_z_pos_pid());
         params->update_vel_pid_constants(position_control.get_x_vel_pid(), position_control.get_y_vel_pid(), position_control.get_z_vel_pid());
+        attitude_control.set_ff_rp_value(params->get_param_value(PARAMS::ff_ang_rp_id));
+        attitude_control.set_ff_yaw_value(params->get_param_value(PARAMS::ff_ang_yaw_id));
+        position_control.set_ff_pos_xy_value(params->get_param_value(PARAMS::ff_pos_xy_id));
+        position_control.set_ff_pos_z_value(params->get_param_value(PARAMS::ff_pos_z_id));
         params->pid_constants_updated();
     }
 
@@ -143,6 +150,7 @@ void Controller::run_stabilize_control(Force& forces, Torques& torques){
     torques_nm = ang_accel_des*UAV::inertia_kg_m2;
 
     forces = force_xyz_n;
+    //std::cout << "FX: " << forces.x() << "    FY: " << forces.y() << std::endl;
 
     torques = torques_nm;
 }
@@ -222,14 +230,9 @@ void Controller::run_altitude_control(Force& forces, Torques& torques){
 
     //Add feedforward from RC controller as Stabilize control. This way there is no initial gap when switching from stabilize to altitude.
     force_xyz_n.z() += hover_throttle;
-    //force_xyz_n.apply_limits(100.0, 100.0, UAV::mass_kg*GRAVITY*2);
     force_xyz_n.z() = saturation(force_xyz_n.z(), (float) (0.5*UAV::mass_kg*GRAVITY), (float)(1.5*UAV::mass_kg*GRAVITY));
-    //Nuevo:
-    //force_xyz_n.z() = saturation(force_xyz_n.z(), (float) (stabilize_throttle*0.8), (float)(stabilize_throttle*1.5));
     
-
     forces = force_xyz_n;
-
     //std::cout << "Force Z Altitude: " << forces.z() << "   Stabilize Throttle: " << stabilize_throttle << std::endl;
     torques = torques_nm;
 }
@@ -268,7 +271,6 @@ void Controller::run_position_control(Force& forces, Torques& torques){
 
         force_xyz_n.rotate_to_uav_frame(common.get_current_attitude()->yaw());
         force_xyz_n.from_NED_to_NEU();
-        force_xyz_n.limit_to_xy(100);
     }   else {
         if (common.has_position().falling_edge()){
             std::cout << "Lost position. Changed to Stabilize Mode." << std::endl;
@@ -299,15 +301,13 @@ void Controller::run_position_control(Force& forces, Torques& torques){
     //Compute the desired torques given the UAV inertia
     torques_nm = ang_accel_des*UAV::inertia_kg_m2;
     
-    //Normalize the forces by mass.
-    Mixer::normalize_force_by_mass(force_xyz_n);
+    //Normalize the forces by mass. Not necessary with physical mixer.
+    //Mixer::normalize_force_by_mass(force_xyz_n);
 
     //Add feedforward from RC controller as Stabilize control. This way there is no initial gap when switching from stabilize to altitude.
     force_xyz_n.z() += hover_throttle;
-    force_xyz_n.apply_limits(2.5, 2.5, 1.0);
-    //Nuevo:
-    force_xyz_n.z() = saturation(force_xyz_n.z(), (float) (hover_throttle*0.9), (float)(hover_throttle*1.5));
-       
+    force_xyz_n.apply_limits(UAV::max_force_x, UAV::max_force_y, (float)(1.5*UAV::mass_kg*GRAVITY));
+    force_xyz_n.z() = saturation(force_xyz_n.z(), (float) (0.5*UAV::mass_kg*GRAVITY), (float)(1.5*UAV::mass_kg*GRAVITY));
     
     forces = force_xyz_n;
     torques = torques_nm;
@@ -434,5 +434,5 @@ void Controller::set_z_terrain(){
 }
 
 void Controller::set_factor_throttle_to_fz(){
-    factor_thr_fz = common.get_params()->get_param_value(PARAMS::factor_throttle_to_fz);
+    factor_thr_fz = common.get_params()->get_param_value(PARAMS::factor_throttle_to_fz_id);
 }

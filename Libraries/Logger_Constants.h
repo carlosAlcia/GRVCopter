@@ -31,4 +31,17 @@ namespace LOG_C {
         static constexpr int PWM10_ID = 27;
         static constexpr int PWM11_ID = 28;
         static constexpr int PWM12_ID = 29;
+        static constexpr int INT_POS_X = 30;
+        static constexpr int INT_POS_Y = 31;
+        static constexpr int INT_POS_Z = 32;
+        static constexpr int INT_ANG_R = 33;
+        static constexpr int INT_ANG_P = 34;
+        static constexpr int INT_ANG_Y = 35;
+        static constexpr int VEL_DES_X = 36;
+        static constexpr int VEL_DES_Y = 37;
+        static constexpr int VEL_DES_Z = 38;
+        static constexpr int VEL_CUR_X = 39;
+        static constexpr int VEL_CUR_Y = 40;
+        static constexpr int VEL_CUR_Z = 41;
+        
 }

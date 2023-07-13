@@ -33,6 +33,11 @@ namespace UAV {
     static constexpr float dead_band_width_yaw_rc = 0.1; 
     static constexpr float dead_band_rc = 0.15; 
 
+    //Maximum forces that the UAV can exert in the XY plane. Use to saturate output from position controller.
+    //In Newtons.
+    static constexpr float max_force_x = 1.3;
+    static constexpr float max_force_y = 1.3;
+
 
 
 }

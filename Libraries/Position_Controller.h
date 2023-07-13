@@ -15,6 +15,10 @@ class PositionControl {
         PID pid_y_pos = PID(DEFAULT_KP_PID*10, 0, 0);
         PID pid_z_pos = PID(DEFAULT_KP_PID, 0, 0);
 
+        //Feedforward terms:
+        float ff_pox_xy = 1.0;
+        float ff_pos_z = 4.0;
+
     public:
         PositionControl(){}
 
@@ -69,6 +73,14 @@ class PositionControl {
 
         PID* get_z_vel_pid(){
             return &pid_z_vel;
+        }
+
+        void set_ff_pos_xy_value(float new_value){
+            ff_pox_xy = new_value;
+        }
+
+        void set_ff_pos_z_value(float new_value){
+            ff_pos_z = new_value;
         }
 
         //@brief Compute the desired forces in each axis given a target position and the current position.

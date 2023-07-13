@@ -14,7 +14,8 @@ class AttitudeControl {
         PID pid_pitch_rate = PID(DEFAULT_KP_PID*0.15, DEFAULT_KI_PID*0.001, DEFAULT_KD_PID*0.01, 1);
         PID pid_yaw_rate = PID(DEFAULT_KP_PID*0.1, DEFAULT_KI_PID*0.05, DEFAULT_KD_PID*0.01, 1);
 
-        float FF = (M_PI/180)*0.15; //Feedforward factor.
+        float ff_ang_rp = (M_PI/180)*0.15; //Feedforward factor.
+        float ff_ang_yaw = (M_PI/180)*0.15; //Feedforward factor.
 
     public:
         AttitudeControl(){}
@@ -69,6 +70,14 @@ class AttitudeControl {
 
         PID* get_yaw_rate_pid(){
             return &pid_yaw_rate;
+        }
+
+        void set_ff_rp_value(float new_value){
+            ff_ang_rp = new_value;
+        }
+
+        void set_ff_yaw_value(float new_value){
+            ff_ang_yaw = new_value;
         }
 
         //@brief Run the attitude controller to compute the desired angular acceleration.

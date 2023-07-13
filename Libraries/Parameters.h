@@ -58,9 +58,15 @@ namespace PARAMS
 
     //Factor for throttle to force in Z in stabilize mode.
     //May change for each UAV.
-    static constexpr short unsigned int factor_throttle_to_fz = 24;
+    static constexpr short unsigned int factor_throttle_to_fz_id = 24;
 
-    static constexpr short unsigned int number_params = 25;
+    //Feedforward params.
+    static constexpr short unsigned int ff_ang_rp_id = 25;
+    static constexpr short unsigned int ff_ang_yaw_id = 26;
+    static constexpr short unsigned int ff_pos_xy_id = 27;
+    static constexpr short unsigned int ff_pos_z_id = 28;
+
+    static constexpr short unsigned int number_params = 29;
 
     static const char *params_names[] = {
         "Roll_ang_P", "Pitch_ang_P", "Yaw_ang_P",
@@ -71,7 +77,8 @@ namespace PARAMS
         "X_vel_P", "Y_vel_P", "Z_vel_P",
         "X_vel_I", "Y_vel_I", "Z_vel_I",
         "X_vel_D", "Y_vel_D", "Z_vel_D", 
-        "FACTOR_THRT_2_FZ"};
+        "FACTOR_THRT_2_FZ", "FF_ang_rp", "FF_ang_yaw",
+        "FF_pos_xy", "FF_pos_z"};
 
     class Params
     {
@@ -93,7 +100,8 @@ namespace PARAMS
                                  10.0, 10.0, 1.0,
                                  5.0, 5.0, 1.0,
                                  0.05, 0.05, 1.0,
-                                 0.05, 0.05, 0.0, 8.125};
+                                 0.05, 0.05, 0.0, 8.125, 0.002618,
+                                 0.002618, 1.0, 4.0};
 
         bool param_changed = false;
 

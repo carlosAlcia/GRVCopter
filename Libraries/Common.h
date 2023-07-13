@@ -83,7 +83,7 @@ namespace COMMON {
 
                 //Check if the position received is possible compared with the current position:
                 if (_has_position){
-                    if (Position::error(&received_position, &current_position).norm_euclidean() > 1){
+                    if (Position::error(&received_position, &current_position).norm_euclidean() > 0.05){
                         return;
                     }
                 }
