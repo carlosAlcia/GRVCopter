@@ -84,6 +84,7 @@ namespace COMMON {
                 mtx.unlock();
             }
 
+            //@brief Thread Safe.
             void update_current_position(float *_pos){
                 Position received_position = _pos;
                 //Ardupilot send position in cm, change to m to unify.
@@ -114,12 +115,14 @@ namespace COMMON {
                 mtx.unlock();
             }
 
+            //@brief Thread Safe.
             void set_current_position_as_target_position(){
                 mtx.lock();
                 target_position = current_position;
                 mtx.unlock();
             }
 
+            //@brief Thread Safe.
             void update_current_attitude(float *_att){
                 mtx.lock();
                 current_attitude = _att;
@@ -127,12 +130,14 @@ namespace COMMON {
                 mtx.unlock();
             }
 
+            //@brief Thread Safe.
             void update_battery_voltage(float voltage){
                 mtx.lock();
                 battery_voltage = voltage;
                 mtx.unlock();
             }
 
+            //@brief Thread Safe.
             void update_current_vel(float *_vel){
                 mtx.lock();
                 current_vel = _vel;
@@ -143,12 +148,14 @@ namespace COMMON {
                 mtx.unlock();
             }
 
+            //@brief Thread Safe.
             void update_current_rate(float *_rate){
                 mtx.lock();
                 current_rate = _rate;
                 mtx.unlock();
             }
 
+            //@brief Thread Safe.
             void update_rc(float *_rc){
                 mtx.lock();
                 rc = _rc;
@@ -160,21 +167,32 @@ namespace COMMON {
                 mtx.unlock();
             }
 
-            //@Function to check if it is armed. Channel 7 of RC. Returns a Ebool so is possible to check for rising of falling edges.
+            //@brief Function to check if it is armed. Channel 7 of RC. Returns a Ebool so is possible to check for rising of falling edges. Thread Safe.
             Ebool is_armed(){
-                return _is_armed;
+                mtx.lock();
+                Ebool armed = _is_armed;
+                mtx.unlock();
+                return armed;
             }
 
             //@brief Function to know if GRVCOPTER has just be enabled.
-            //Can return false although GRVCOPTER is enabled. To check if it is enabled call grvcopter_running() instead.
+            //Can return false although GRVCOPTER is enabled. To check if it is enabled call grvcopter_running() instead. Thread Safe.
             bool start_grvcopter(){
-                return _grvcopter_enabled.rising_edge();
+                bool _rising;
+                mtx.lock();
+                _rising = _grvcopter_enabled.rising_edge();
+                mtx.unlock();
+                return _rising;
             }
 
             //@brief Function to check if GRVCOPTER is enabled or not.
-            //GRVCOPTER is enabled when the CHANNEL 9 of RC is High.
+            //GRVCOPTER is enabled when the CHANNEL 9 of RC is High. Thread Safe.
             bool grvcopter_running(){
-                return _grvcopter_enabled;
+                bool _g_e;
+                mtx.lock();
+                _g_e = _grvcopter_enabled;
+                mtx.unlock();
+                return _g_e;
             }
 
             //@brief Function to get the RC class. Thread safe.
@@ -256,14 +274,14 @@ namespace COMMON {
             //@returns True if changed from last time. Thread Safe.
             bool check_mode(){
                 RC _rc;
-                this.get_rc(_rc);
+                this->get_rc(_rc);
                 float ch_mode_value = _rc.get_channel(CH_MODE);
 
                 int previous_mode = mode;
                 
                 if (ch_mode_value < -0.8)
                 {
-                    if(this.has_position()) {
+                    if(this->has_position()) {
                         mode = UAV::MODE_POSITION;
                     } else {
                         std::cout << "NO POSITION MODE: NO POSITION DATA" << std::endl;
@@ -272,7 +290,7 @@ namespace COMMON {
                 }
                 else if ((ch_mode_value < -0.2 ) && (ch_mode_value > -0.8))
                 {
-                    if(this.has_position()) {
+                    if(this->has_position()) {
                         mode = UAV::MODE_ALTITUDE;
                     } else {
                         std::cout << "NO ALTITUDE MODE: NO POSITION DATA" << std::endl;
@@ -294,6 +312,15 @@ namespace COMMON {
                 _mode = mode;
                 mtx.unlock();
                 return _mode;
+            }
+            
+            //@brief Get the current battery voltage. Thread Safe.
+            float get_battery_voltage(){
+                float bat;
+                mtx.lock();
+                bat = battery_voltage;
+                mtx.unlock();
+                return bat;
             }
 
     };

@@ -21,7 +21,7 @@ int main(){
     cout << "\n" << endl;
     cout << "Enter UAV IP" << endl;
     char ip[20] = "127.0.0.1";
-    //cin >> ip;
+    cin >> ip;
 
     UDP::UDP_Socket socket_local = UDP::UDP_Socket(ip);
 
@@ -74,6 +74,9 @@ void process_msg(char* buf){
     case TARGET_POS_MSG_ID:
         process_target_pos_msg(&msg);
         break;
+    case BATTERY_VOLTAGE_MSG_ID:
+        process_battery_voltage_msg(&msg);
+        break;
     default:
         break;
     }
@@ -107,6 +110,11 @@ void process_pid_constant_change_msg(MSG_GRVCOPTER::Message_Bytes *msg){
 void process_params_request_msg(){
     common.get_params()->send_number_of_params();
     common.get_params()->send_all_params();
+}
+
+void process_battery_voltage_msg(MSG_GRVCOPTER::Message_Bytes *msg){
+    common.update_battery_voltage(msg->DATA[0].value);
+    std::cout << "Battery: " << common.get_battery_voltage() << std::endl;
 }
 
 void process_target_pos_msg(MSG_GRVCOPTER::Message_Bytes *msg){

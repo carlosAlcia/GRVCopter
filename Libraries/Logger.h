@@ -106,8 +106,8 @@ class Logger {
     public:
 
 
-        void save_att(Attitude *att){
-            Attitude att_degrees = Attitude::from_rad_to_degrees(*att);
+        void save_att(Attitude att){
+            Attitude att_degrees = Attitude::from_rad_to_degrees(att);
             uint8_t bytes[LOG_ITEM_SIZE] = {0};
             pack_log_item(LOG_C::ROLL_ID, att_degrees.roll(), bytes);
             fwrite(bytes, sizeof(uint8_t), LOG_ITEM_SIZE, file);
@@ -117,8 +117,8 @@ class Logger {
             fwrite(bytes, sizeof(uint8_t), LOG_ITEM_SIZE, file);
         }
 
-        void save_des_att(Attitude *att){
-            Attitude att_degrees = Attitude::from_rad_to_degrees(*att);
+        void save_des_att(Attitude att){
+            Attitude att_degrees = Attitude::from_rad_to_degrees(att);
             uint8_t bytes[LOG_ITEM_SIZE] = {0};
             pack_log_item(LOG_C::DES_ROLL_ID, att_degrees.roll(), bytes);
             fwrite(bytes, sizeof(uint8_t), LOG_ITEM_SIZE, file);
@@ -128,23 +128,23 @@ class Logger {
             fwrite(bytes, sizeof(uint8_t), LOG_ITEM_SIZE, file);
         }
 
-        void save_pos(Position *pos){
+        void save_pos(Position pos){
             uint8_t bytes[LOG_ITEM_SIZE] = {0};
-            pack_log_item(LOG_C::POS_X_ID, pos->x(), bytes);
+            pack_log_item(LOG_C::POS_X_ID, pos.x(), bytes);
             fwrite(bytes, sizeof(uint8_t), LOG_ITEM_SIZE, file);
-            pack_log_item(LOG_C::POS_Y_ID, pos->y(), bytes);
+            pack_log_item(LOG_C::POS_Y_ID, pos.y(), bytes);
             fwrite(bytes, sizeof(uint8_t), LOG_ITEM_SIZE, file);
-            pack_log_item(LOG_C::POS_Z_ID, pos->z(), bytes);
+            pack_log_item(LOG_C::POS_Z_ID, pos.z(), bytes);
             fwrite(bytes, sizeof(uint8_t), LOG_ITEM_SIZE, file);
         }
 
-        void save_des_pos(Position *pos){
+        void save_des_pos(Position pos){
             uint8_t bytes[LOG_ITEM_SIZE] = {0};
-            pack_log_item(LOG_C::DES_POS_X_ID, pos->x(), bytes);
+            pack_log_item(LOG_C::DES_POS_X_ID, pos.x(), bytes);
             fwrite(bytes, sizeof(uint8_t), LOG_ITEM_SIZE, file);
-            pack_log_item(LOG_C::DES_POS_Y_ID, pos->y(), bytes);
+            pack_log_item(LOG_C::DES_POS_Y_ID, pos.y(), bytes);
             fwrite(bytes, sizeof(uint8_t), LOG_ITEM_SIZE, file);
-            pack_log_item(LOG_C::DES_POS_Z_ID, pos->z(), bytes);
+            pack_log_item(LOG_C::DES_POS_Z_ID, pos.z(), bytes);
             fwrite(bytes, sizeof(uint8_t), LOG_ITEM_SIZE, file);
         }
 
