@@ -119,11 +119,8 @@ void process_target_pos_msg(MSG_GRVCOPTER::Message_Bytes *msg){
 }
 
 void run_controller(){
-    extern LOG::Logger& logger;
-    logger.save_att(common.get_current_attitude());
-    logger.save_des_att(common.get_target_attitude());
-    logger.save_des_pos(common.get_target_position());
-    logger.save_pos(common.get_current_position());
+    log_status_data();
+    
     if (common.grvcopter_running()){
         if(common.check_mode()){
             switch (common.get_mode())
@@ -143,4 +140,22 @@ void run_controller(){
         }
         controller.run();
     }
+}
+
+void log_status_data(){
+    extern LOG::Logger& logger;
+    Attitude current_att;
+    Attitude des_attitude;
+    Position des_position;
+    Position current_position;
+    
+    common.get_current_attitude(current_att);
+    common.get_target_attitude(des_attitude);
+    common.get_target_position(des_position);
+    common.get_current_position(current_position);
+    
+    logger.save_att(current_att);
+    logger.save_des_att(des_attitude);
+    logger.save_des_pos(des_position);
+    logger.save_pos(current_position);
 }

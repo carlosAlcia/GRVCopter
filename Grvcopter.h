@@ -25,6 +25,7 @@ void process_rate_msg(MSG_GRVCOPTER::Message_Bytes *msg);
 void process_target_pos_msg(MSG_GRVCOPTER::Message_Bytes *msg);
 void process_pid_constant_change_msg(MSG_GRVCOPTER::Message_Bytes *msg);
 void process_params_request_msg();
+void log_status_data();
 
 void run_controller();
 

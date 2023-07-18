@@ -66,7 +66,7 @@ namespace MSG_GRVCOPTER {
     static constexpr unsigned short TARGET_POS_MSG_ID = 11;
     
     
-
+    static constexpr unsigned short BATTERY_VOLTAGE_MSG_ID = 12;
 
     static constexpr unsigned short MAX_NUM_CHANNEL = 14;
     static constexpr unsigned short MSG_DATA_LENGTH = 15;

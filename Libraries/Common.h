@@ -49,6 +49,8 @@ namespace COMMON {
             int mode = 0;
 
             PARAMS::Params params;
+
+            float battery_voltage = 0.0;
             
 
 
@@ -72,6 +74,14 @@ namespace COMMON {
                 bool reset_aux = reset_pids;
                 reset_pids = false;
                 return reset_aux;
+            }
+
+            void mutex_lock(){
+                mtx.lock();
+            }
+
+            void mutex_unlock(){
+                mtx.unlock();
             }
 
             void update_current_position(float *_pos){
@@ -114,6 +124,12 @@ namespace COMMON {
                 mtx.lock();
                 current_attitude = _att;
                 _has_position.tick();
+                mtx.unlock();
+            }
+
+            void update_battery_voltage(float voltage){
+                mtx.lock();
+                battery_voltage = voltage;
                 mtx.unlock();
             }
 
@@ -161,24 +177,49 @@ namespace COMMON {
                 return _grvcopter_enabled;
             }
 
+            //@brief Function to get the RC class. Thread safe.
+            void get_rc(RC &_rc){
+                mtx.lock();
+                _rc = rc;
+                mtx.unlock();
+            };
 
-            void get_rc(RC &_rc){_rc = rc;};
             RC* get_rc(){return &rc;};
 
-            //@brief Get the current position in meter and NED.
-            void get_current_position(Position &pos){pos = current_position;}; 
+            //@brief Get the current position in meter and NED. Thread safe.
+            void get_current_position(Position &pos){
+                mtx.lock();
+                pos = current_position;
+                mtx.unlock();
+            };
+
             Velocity* get_current_vel(){return &current_vel;}; 
             Position* get_current_position(){return &current_position;};
 
-            //@brief Get the target position in meter and NED.
-            void get_target_position(Position &pos){pos = target_position;}; 
+            //@brief Get the target position in meter and NED. Thread Safe.
+            void get_target_position(Position &pos){
+                mtx.lock();
+                pos = target_position;
+                mtx.unlock();
+            };
+
             //@brief Get the target position in meter and NED.
             Position* get_target_position(){return &target_position;};
-            //@brief Get the target position Z in meter and NED.
-            float get_target_z(){return target_position.z();};
+            //@brief Get the target position Z in meter and NED. Thread Safe.
+            float get_target_z(){
+                float _z;
+                mtx.lock();
+                _z = target_position.z();
+                mtx.unlock();
+                return _z;
+                };
 
-            //@brief Get the current attitude in Rad.
-            void get_current_attitude(Attitude &att){att = current_attitude;}; 
+            //@brief Get the current attitude in Rad. Thread Safe.
+            void get_current_attitude(Attitude &att){
+                mtx.lock();
+                att = current_attitude;
+                mtx.unlock();
+                }; 
 
             //@brief Get the current rate in Rad/s
             Rate* get_current_rate(){return &current_rate;}; 
@@ -186,8 +227,14 @@ namespace COMMON {
             //@brief Get the current attitude in Rad.
             Attitude* get_current_attitude(){return &current_attitude;};
 
-            //@brief Get the target attitude in Rad.
-            void get_target_attitude(Attitude &att){att = target_attitude;};
+            //@brief Get the target attitude in Rad. Thread Safe.
+            void get_target_attitude(Attitude &att){
+                mtx.lock();
+                att = target_attitude;
+                mtx.unlock();
+                };
+
+
             //@brief Get the target attitude in Rad.
             Attitude* get_target_attitude(){return &target_attitude;};
 
@@ -196,19 +243,27 @@ namespace COMMON {
             //Be aware that the position will not be sent from Ardupilot if the flight mode in Ardupilot is not Position Hold or Guided.
             //The mode in Ardupilot can be Altitude Hold and the position received will have the altitude component OK but the XY received will be 0.
             //The best practice is to have the same configuration in Ardupilot and Grvcopter: Stabilize, Altitude Hold and Position Hold in the channel 5 of the RC.
+            //Thread Safe.
             Ebool has_position(){
-                return _has_position;
+                mtx.lock();
+                Ebool _has_position_l = _has_position;
+                mtx.unlock();
+                return _has_position_l;
             }
 
             //@brief Check the current flight mode and store in a private variable. Get the mode calling get_mode() function.
             //Returns true if it changed from last time checked.
-            //@returns True if changed from last time.
+            //@returns True if changed from last time. Thread Safe.
             bool check_mode(){
-                float ch_mode_value = rc.get_channel(CH_MODE);
+                RC _rc;
+                this.get_rc(_rc);
+                float ch_mode_value = _rc.get_channel(CH_MODE);
+
                 int previous_mode = mode;
+                
                 if (ch_mode_value < -0.8)
                 {
-                    if(_has_position) {
+                    if(this.has_position()) {
                         mode = UAV::MODE_POSITION;
                     } else {
                         std::cout << "NO POSITION MODE: NO POSITION DATA" << std::endl;
@@ -217,7 +272,7 @@ namespace COMMON {
                 }
                 else if ((ch_mode_value < -0.2 ) && (ch_mode_value > -0.8))
                 {
-                    if(_has_position) {
+                    if(this.has_position()) {
                         mode = UAV::MODE_ALTITUDE;
                     } else {
                         std::cout << "NO ALTITUDE MODE: NO POSITION DATA" << std::endl;
@@ -231,10 +286,14 @@ namespace COMMON {
                 return mode != previous_mode;
             }
 
-            //@brief Function to get the current Flight Mode.
-            //@return The current flight mode.
+            //@brief Function to get the current Flight Mode. Thread safe.
+            //@return The current flight mode. Thread Safe.
             int get_mode(){
-                return mode;
+                int _mode;
+                mtx.lock();
+                _mode = mode;
+                mtx.unlock();
+                return _mode;
             }
 
     };
