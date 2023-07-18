@@ -95,6 +95,9 @@ namespace COMMON {
                 mtx.unlock();
             }
 
+            //@brief Function to set a new target position. Might be called when a new target position msg is received.
+            //Called also when changing to poshold or althold.
+            //@param: pos: [Position] New target position in m and NED.
             void set_target_position(Position pos){
                 mtx.lock();
                 target_position = pos;

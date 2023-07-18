@@ -70,6 +70,10 @@ void process_msg(char* buf){
     case PARAMS_REQUEST_MSG_ID:
         sock->SaveAsReplyAddr();
         process_params_request_msg();
+        break;
+    case TARGET_POS_MSG_ID:
+        process_target_pos_msg(&msg);
+        break;
     default:
         break;
     }
@@ -97,11 +101,21 @@ void process_rc_msg(MSG_GRVCOPTER::Message_Bytes *msg){
 
 void process_pid_constant_change_msg(MSG_GRVCOPTER::Message_Bytes *msg){
     common.get_params()->change_param_value((int)msg->DATA[0].value, msg->DATA[1].value);
+    std::cout << "Param " << PARAMS::params_names[(int)msg->DATA[0].value] << " changed to: " << msg->DATA[1].value;
 }
 
 void process_params_request_msg(){
     common.get_params()->send_number_of_params();
     common.get_params()->send_all_params();
+}
+
+void process_target_pos_msg(MSG_GRVCOPTER::Message_Bytes *msg){
+    Position new_target_position;
+    //In future updates, add a fence check before set the new target position to avoid pass the limits.
+    new_target_position.x() = msg->DATA[0].value;
+    new_target_position.y() = msg->DATA[1].value;
+    new_target_position.z() = msg->DATA[2].value;
+    common.set_target_position(new_target_position);
 }
 
 void run_controller(){

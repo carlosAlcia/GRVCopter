@@ -57,6 +57,13 @@ namespace MSG_GRVCOPTER {
     static constexpr unsigned short NUMBER_PARAMS_MSG_ID = 9;
 
     static constexpr unsigned short PARAM_INFO_MSG_ID = 10;
+
+    //DATA:
+            //X
+            //Y
+            //Z
+            //We have 12 more fields that we can use to specify target position, velocity... for future updates.
+    static constexpr unsigned short TARGET_POS_MSG_ID = 11;
     
     
 
