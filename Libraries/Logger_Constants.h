@@ -43,5 +43,5 @@ namespace LOG_C {
         static constexpr int VEL_CUR_X = 39;
         static constexpr int VEL_CUR_Y = 40;
         static constexpr int VEL_CUR_Z = 41;
-        
+        static constexpr int BATT_VOLT = 42;
 }

@@ -94,7 +94,7 @@ void Controller::run(){
     Mixer_Physical::get_forces_each_motor(&mixer_physical, &force_xyz_n, &torques_nm, force_motor_phys);
 
     float pwms_physical[UAV::num_motors]{0};
-    mixer_physical.force_to_pwm(force_motor_phys, pwms_physical);
+    mixer_physical.force_to_pwm(force_motor_phys, pwms_physical, common.get_battery_voltage());
     //Fin nuevo mixer fisico.
 
     MSG_GRVCOPTER::Message_Bytes msg;

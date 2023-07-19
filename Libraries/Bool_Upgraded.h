@@ -6,8 +6,8 @@ class Ebool {
         bool _value = false;
         bool rise_edge = false;
         bool fall_edge = false;
-        int reset = 20;
-        const int RESET_DEFAULT = 20;
+        int reset = 50;
+        const int RESET_DEFAULT = 50;
 
     public:
         Ebool(){};

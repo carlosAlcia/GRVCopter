@@ -14,7 +14,7 @@ private:
     float y_factors[UAV::num_motors]{0.0};
     float z_factors[UAV::num_motors]{0.0};
 
-    float coeff_thrust_to_pwm[3] {-7.0183, 161.25, 1122.2};
+    float coeff_thrust_to_pwm[3] {-3.9478, 120.94, 1122.2};
 
 public:
     Mixer_Physical(){};
@@ -202,13 +202,22 @@ public:
         }
     } 
 
-    void force_to_pwm(float *forces_each_motor, float* pwms){
+    void force_to_pwm(float *forces_each_motor, float* pwms, float voltage){
         for (int i = 0; i < UAV::num_motors; i++){
             float force = forces_each_motor[i];
+            voltage_correction(force, voltage);
             float pwm_float = coeff_thrust_to_pwm[0]*pow(force, 2) + coeff_thrust_to_pwm[1]*force + coeff_thrust_to_pwm[2]; 
             int pwm = (int) pwm_float;
             saturation_and_check(pwm,1000,2000);
             pwms[i] = pwm;
+        }
+    }
+
+
+    void voltage_correction(float& force, float voltage){
+        //Check we have battery voltage data. If it is greater than 14V we can suppose we have that information.
+        if (voltage > 14000){ 
+            force *= (16000/voltage);
         }
     }
 

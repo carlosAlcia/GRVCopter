@@ -314,7 +314,7 @@ namespace COMMON {
                 return _mode;
             }
             
-            //@brief Get the current battery voltage. Thread Safe.
+            //@brief Get the current battery voltage in mV. Thread Safe.
             float get_battery_voltage(){
                 float bat;
                 mtx.lock();
