@@ -12,6 +12,8 @@
 #include "Attitude.h"
 #include "Bool_Upgraded.h"
 #include "Mixer_Physical.h"
+#include "Wrench_Estimator.h"
+
 
 class Controller {
     private:
@@ -48,6 +50,8 @@ class Controller {
         //Factor to convert from throttle to force Z.
         float factor_thr_fz = 1.0;
 
+        Wrench_Estimator wrench_estimator;
+
     public: 
         Controller(){
             mixer.set_roll_factors(UAV::roll_factor);
@@ -64,6 +68,9 @@ class Controller {
             mixer_physical.set_x_factors(UAV::x_factor_fis);
             mixer_physical.set_y_factors(UAV::y_factor_fis);
             mixer_physical.set_z_factors(UAV::z_factor_fis);
+
+            
+
         }
 
         void run();

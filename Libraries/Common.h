@@ -51,6 +51,9 @@ namespace COMMON {
             PARAMS::Params params;
 
             float battery_voltage = 0.0;
+
+            Force last_force_controller_out;
+            Torques last_torques_controller_out;
             
 
 
@@ -323,6 +326,21 @@ namespace COMMON {
                 return bat;
             }
 
+            void set_last_force_controller_out(Force _forces){
+                last_force_controller_out = _forces;
+            }
+
+            Force get_last_force_controller_out(){
+                return last_force_controller_out;
+            }
+
+            void set_last_torques_controller_out(Torques _torques){
+                last_torques_controller_out = _torques;
+            }
+
+            Torques get_last_torques_controller_out(){
+                return last_torques_controller_out;
+            }
     };
 
     Common &get_common();

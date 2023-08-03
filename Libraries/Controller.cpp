@@ -19,6 +19,7 @@ void Controller::run(){
     if (common.is_armed().rising_edge()){
         position_control.reset_pids();
         attitude_control.reset_pids();
+        wrench_estimator.initialize();
         set_offset_angles();
         set_z_terrain();
         //This is a param that can be changed only when arming. If in a future are more params like this, add in a new function called:
@@ -74,6 +75,21 @@ void Controller::run(){
     logger.save_float_data(LOG_C::TORQUE_PITCH_DES_ID, torques_nm[1]);
     logger.save_float_data(LOG_C::TORQUE_YAW_DES_ID, torques_nm[2]);
 
+    common.set_last_force_controller_out(force_xyz_n);
+    common.set_last_torques_controller_out(torques_nm);
+
+    Force external_force_estimation;
+    Torques external_torque_estimation;
+
+    wrench_estimator.get_wrench_estimation(external_force_estimation, external_torque_estimation);
+    logger.save_float_data(LOG_C::EXT_EST_FORCE_X_ID, external_force_estimation[0]);
+    logger.save_float_data(LOG_C::EXT_EST_FORCE_Y_ID, external_force_estimation[1]);
+    logger.save_float_data(LOG_C::EXT_EST_FORCE_Z_ID, external_force_estimation[2]);
+    logger.save_float_data(LOG_C::EXT_EST_TORQUE_ROLL_ID, external_torque_estimation[0]);
+    logger.save_float_data(LOG_C::EXT_EST_TORQUE_PITCH_ID, external_torque_estimation[1]);
+    logger.save_float_data(LOG_C::EXT_EST_TORQUE_YAW_ID, external_torque_estimation[2]);
+
+
 
     //Get force contribution of each motor with the mixer:
     /*float force_motor[UAV::num_motors]{0.0};
@@ -82,20 +98,11 @@ void Controller::run(){
     float pwms[UAV::num_motors]{0.0};
     Mixer::force_to_pwm(force_motor, pwms);*/
 
-    //Nuevo para mixer fisico:
-    //force_xyz_n.x() *= 0.5;
-    //force_xyz_n.y() *= 0.5;
-    //torques_nm = torques_nm * 0.1;
-    //torques_nm.yaw() *= 1.5;
-    //force_xyz_n.z() *= 32.5;//Valor sacado experimentalmente para tener un valor equivalente de pwm con los dos mixers. 
-    //Deberá verse reflejado en las constantes del controlador.
-
     float force_motor_phys[UAV::num_motors]{0.0};
     Mixer_Physical::get_forces_each_motor(&mixer_physical, &force_xyz_n, &torques_nm, force_motor_phys);
 
     float pwms_physical[UAV::num_motors]{0};
     mixer_physical.force_to_pwm(force_motor_phys, pwms_physical, common.get_battery_voltage());
-    //Fin nuevo mixer fisico.
 
     MSG_GRVCOPTER::Message_Bytes msg;
     MSG_GRVCOPTER::pack_pwm_message(UAV::num_motors, pwms_physical, &msg);
@@ -107,11 +114,6 @@ void Controller::run(){
     for (uint8_t i = 0; i < UAV::num_motors; i++){
         logger.save_float_data(LOG_C::PWM1_ID+i, pwms_physical[i]);
     }
-
-    //To log fisicos PWMs:
-    /*for (uint8_t i = UAV::num_motors; i < (UAV::num_motors*2); i++){
-        logger.save_float_data(LOG_C::PWM1_ID+i, pwms_physical[i-UAV::num_motors]);
-    }*/
 
 }
 
@@ -150,8 +152,6 @@ void Controller::run_stabilize_control(Force& forces, Torques& torques){
     torques_nm = ang_accel_des*UAV::inertia_kg_m2;
 
     forces = force_xyz_n;
-    //std::cout << "FX: " << forces.x() << "    FY: " << forces.y() << std::endl;
-
     torques = torques_nm;
 }
 
@@ -233,7 +233,6 @@ void Controller::run_altitude_control(Force& forces, Torques& torques){
     force_xyz_n.z() = saturation(force_xyz_n.z(), (float) (0.5*UAV::mass_kg*GRAVITY), (float)(1.5*UAV::mass_kg*GRAVITY));
     
     forces = force_xyz_n;
-    //std::cout << "Force Z Altitude: " << forces.z() << "   Stabilize Throttle: " << stabilize_throttle << std::endl;
     torques = torques_nm;
 }
 
@@ -253,8 +252,6 @@ void Controller::run_position_control(Force& forces, Torques& torques){
     //Obtain targets.
     compute_yaw_target_from_rc();
     compute_targets_from_rc_pos_control();
-
-    //std::cout << "Targets PosX:" << common.get_current_position()->x() << "PosY:" << common.get_current_position()->y() << std::endl;
 
     Acceleration accel_xyz_mss;
     Force force_xyz_n;

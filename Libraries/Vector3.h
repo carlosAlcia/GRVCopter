@@ -3,7 +3,7 @@
 #pragma once
 
 #include "math.h"
-
+#include <string>
 
 class Vector {
 
@@ -68,6 +68,40 @@ class Vector {
             return result;
         }
 
+        Vector operator-(){
+            Vector result;
+            result[0] = _x*-1.0;
+            result[1] = _y*-1.0;
+            result[2] = _z*-1.0;
+            return result;
+        }
+
+        Vector operator-(Vector _second_term){
+            Vector result;
+            result[0] = _x-_second_term[0];
+            result[1] = _y-_second_term[1];
+            result[2] = _z-_second_term[2];
+            return result;
+        }
+
+        void operator+=(Vector _second_term){
+            _x += _second_term[0];
+            _y += _second_term[1];
+            _z += _second_term[2];
+        }
+
+        std::string print(){
+            return "X: " + std::to_string(_x) + " Y: " + std::to_string(_y) + " Z: " + std::to_string(_z);
+        }
+
+        Vector cross(Vector _second_term){
+            Vector result;
+            result[0] = _y*_second_term[2] - _z*_second_term[1];
+            result[1] = _z*_second_term[0] - _x*_second_term[2];
+            result[2] = _x*_second_term[1] - _y*_second_term[0];
+            return result;
+        }
+
         template <class T>
         Vector operator/(T factor){
             Vector result;
@@ -75,6 +109,10 @@ class Vector {
             result[1] = this->_y/factor;
             result[2] = this->_z/factor;
             return result;
+        }
+
+        float dot(Vector _vector){
+            return _x*_vector[0] + _y*_vector[1] + _z*_vector[2];
         }
 
         float& operator[](int index){
@@ -94,6 +132,13 @@ class Vector {
                 throw("Index out of bounds.");
                 break;
             }
+        }
+
+
+        void zero(){
+            this->_x = 0.0;
+            this->_y = 0.0;
+            this->_z = 0.0;
         }
 
         //@brief Normalize vector between -1:1.

@@ -44,4 +44,12 @@ namespace LOG_C {
         static constexpr int VEL_CUR_Y = 40;
         static constexpr int VEL_CUR_Z = 41;
         static constexpr int BATT_VOLT = 42;
+        static constexpr int EXT_EST_FORCE_X_ID = 43;
+        static constexpr int EXT_EST_FORCE_Y_ID = 44;
+        static constexpr int EXT_EST_FORCE_Z_ID = 45;
+        static constexpr int EXT_EST_TORQUE_ROLL_ID = 46;
+        static constexpr int EXT_EST_TORQUE_PITCH_ID = 47;
+        static constexpr int EXT_EST_TORQUE_YAW_ID = 48;
+
+
 }
